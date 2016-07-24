@@ -1,7 +1,9 @@
 # About
 Testing express, gulp and jade
 
-1. Install dependencies (require you have node and npm installed):
+0. Install nvm, node, npm
+
+1. Install dependencies
 
 	```
 	npm install
