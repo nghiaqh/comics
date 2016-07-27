@@ -41,7 +41,12 @@ var schemas = {
 	picture: {
 		pictureId: null,
 		uri: null
-	}
+	},
+	series: {
+		seriesId: null,
+		title: null,
+		coverPicture: null
+	},
 };
 
 module.exports = schemas;

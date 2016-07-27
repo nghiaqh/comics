@@ -3,16 +3,34 @@
 var express = require('express');
 var router = express.Router();
 var Book = require('./book');
+var AppSettings = require('../../config/index');
+var _ = require('underscore');
 
 /* GET all books */
 router.get('/', function(req, res, next) {
-	var results = [];
+	var results = {
+		page: req.query.page || 1,
+		hasMore: false,
+		items: []
+	};
 
-	Book.getAll(req.headers.page, function(err, row) {
+	Book.getAll(results.page - 1, function(err, row) {
 		if (err !== null) {
 			res.send(err);
 		}	else {
-			results.push(row);
+
+			// First result is total number of item in table.
+			// Next results are the actual book items.
+			if (_.keys(row).length === 1 && _.keys(row)[0] === 'total') {
+				results.hasMore = row.total > (results.page + 1) * AppSettings.itemsPerPage.book;
+			} else {
+				var item = {};
+				_.keys(row).forEach(function(key, index) {
+					item[transform(key)] = row[key];
+				});
+
+				results.items.push(item);
+			}
 		}
 	}, function(err, total) {
 		res.json(results);
@@ -43,7 +61,7 @@ router.get('/:bookId', function(req, res, next) {
 	});
 });
 
-/* PUT update an book */
+/* PUT update a book */
 router.put('/:bookId', function(req, res, next) {
 	var book = new Book(req.body);
 	book.data.bookId = req.params.bookId;
@@ -57,7 +75,7 @@ router.put('/:bookId', function(req, res, next) {
 	});
 });
 
-/* DELETE delete an book */
+/* DELETE delete a book */
 router.delete('/:bookId', function(req, res, next) {
 	var book = new Book({ bookId: req.params.bookId });
 	book.delete(function(err) {
@@ -68,5 +86,18 @@ router.delete('/:bookId', function(req, res, next) {
 		}
 	});
 });
+
+var transform = function transfromDatabaseNameToJsName(input) {
+	var output = input;
+	var regex = /[a-z]_[a-z]/g;
+	var match = regex.exec(output);
+
+	if (match !== null) {
+		output = input.slice(0, regex.lastIndex-2) + input.slice(regex.lastIndex-1, regex.lastIndex).toUpperCase() + input.slice(regex.lastIndex);
+		output = transform(output);
+	}
+
+	return output;
+};
 
 module.exports = router;

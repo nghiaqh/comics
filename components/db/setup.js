@@ -1,4 +1,7 @@
 /*jshint multistr: true */
+var config = require('../../config/index');
+var dbFile = config.database;
+
 var setup = {
 
 	run: function() {
@@ -7,7 +10,7 @@ var setup = {
 
 	initDatabase: function() {
 		var sqlite3 = require('sqlite3').verbose();
-		var db = new sqlite3.Database('app.db');
+		var db = new sqlite3.Database(dbFile);
 
 		console.log('Setup: creating database tables if not exists ... ');
 

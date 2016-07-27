@@ -33,12 +33,17 @@ Book.findById = function(id, callback) {
 	Database.findById('book', id, callback);
 };
 
-// return books by pagination
+/**
+ * return books by pagination
+ * @param  {integer}  page     start from 0
+ * @param  {Function} callback [description]
+ * @param  {Function} complete [description]
+ * @return
+ */
 Book.getAll = function(page, callback, complete) {
-	var number = 50;
-	page = page || 1;
+	page = page || 0;
 
-	Database.all('book', { number: number, page: page }, callback, complete);
+	Database.selectAll('book', { page: page }, callback, complete);
 };
 
 // map input with schema

@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-var dbFile = 'app.db';
+var AppSettings = require('../../config/index');
 var schemas = require('./schemas');
 var sqlite3 = require('sqlite3').verbose();
 var _ = require('underscore');
@@ -9,7 +9,7 @@ var _ = require('underscore');
 var Database = {
 
 	insert: function(table, data, callback) {
-		var db = new sqlite3.Database(dbFile);
+		var db = new sqlite3.Database(AppSettings.database);
 		var keys = getColumns(data);
 		var values = _.values(data);
 		var placeholders = [];
@@ -36,7 +36,7 @@ var Database = {
 	},
 
 	update: function(table, data, callback) {
-		var db = new sqlite3.Database(dbFile);
+		var db = new sqlite3.Database(AppSettings.database);
 		var keys = getColumns(data);
 		var values = _.values(data);
 		var whereStatement, setStatement, query;
@@ -70,7 +70,7 @@ var Database = {
 	},
 
 	delete: function(table, data, callback) {
-		var db = new sqlite3.Database(dbFile);
+		var db = new sqlite3.Database(AppSettings.database);
 		var keys = getColumns(table);
 		var query = 'DELETE FROM book WHERE ' + table + '_id=(?)';
 
@@ -84,7 +84,7 @@ var Database = {
 	},
 
 	findById: function(table, data, callback) {
-		var db = new sqlite3.Database(dbFile);
+		var db = new sqlite3.Database(AppSettings.database);
 		var query = 'SELECT * FROM ' + table + ' WHERE ' + table + '_id = ?';
 
 		printLog(query, data);
@@ -96,21 +96,27 @@ var Database = {
 		db.close();
 	},
 
-	all: function(table, data, callback, complete) {
-		var db = new sqlite3.Database(dbFile);
-		var query = 'SELECT * FROM ' + table;
+	selectAll: function(table, data, callback, complete) {
+		var db = new sqlite3.Database(AppSettings.database);
+		var queryC = 'SELECT COUNT(*) AS total FROM ' + table;
+		var queryS = 'SELECT * FROM ' + table + ' LIMIT ? OFFSET ?' ;
 
-		printLog(query, data);
+		var page = data.page;
+		var limit = AppSettings.itemsPerPage[table];
+		var offset = data.page * limit;
+
+		printLog(queryC);
+		printLog(queryS, [limit, offset]);
 
 		// TODO: update to be pagination ready
 		db.serialize(function() {
-			db.each(query, [], callback, complete);
+			db.get(queryC, [], callback);
+			db.each(queryS, [limit, offset], callback, complete);
 		});
 
 		db.close();
 	}
 };
-
 
 var transform = function transfromJsNameToDatabaseName(input) {
 	var output = input;
