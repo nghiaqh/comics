@@ -1,3 +1,4 @@
+require('es6-promise').polyfill();
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var fork = require('child_process').fork;

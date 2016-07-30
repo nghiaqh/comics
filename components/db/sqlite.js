@@ -8,6 +8,13 @@ var _ = require('underscore');
 
 var Database = {
 
+	/**
+	 * insert new row into a table
+	 * @param  {string} table [name of the table]
+	 * @param  {collection} data [javascript collection contains data for the row instance]
+	 * @param  {Function} callback [handle the error/complete]
+	 * @return            [no returned output]
+	 */
 	insert: function(table, data, callback) {
 		var db = new sqlite3.Database(AppSettings.database);
 		var keys = getColumns(data);
@@ -35,11 +42,18 @@ var Database = {
 		db.close();
 	},
 
+	/**
+	 * [update description]
+	 * @param  {[type]}   table    [description]
+	 * @param  {[type]}   data     [description]
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
 	update: function(table, data, callback) {
 		var db = new sqlite3.Database(AppSettings.database);
 		var keys = getColumns(data);
 		var values = _.values(data);
-		var whereStatement, setStatement, query;
+		var whereStm, setStatement, query;
 
 		// Remove value and key of value that is null
 		var index = values.indexOf(null);
@@ -56,8 +70,8 @@ var Database = {
 			values.push(id);
 
 			setStatement = keys.join(' = ?, ') + ' = ?';
-			whereStatement = table + '_id = ?';
-			query = 'UPDATE ' + table + ' SET ' + setStatement + ' WHERE ' + whereStatement;
+			whereStm = table + '_id = ?';
+			query = 'UPDATE ' + table + ' SET ' + setStatement + ' WHERE ' + whereStm;
 
 			printLog(query, values);
 
@@ -69,10 +83,17 @@ var Database = {
 		db.close();
 	},
 
+	/**
+	 * [delete description]
+	 * @param  {[type]}   table    [description]
+	 * @param  {[type]}   data     [description]
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
 	delete: function(table, data, callback) {
 		var db = new sqlite3.Database(AppSettings.database);
 		var keys = getColumns(table);
-		var query = 'DELETE FROM book WHERE ' + table + '_id=(?)';
+		var query = 'DELETE FROM ' + table + ' WHERE ' + table + '_id=(?)';
 
 		printLog(query, data);
 
@@ -83,6 +104,13 @@ var Database = {
 		db.close();
 	},
 
+	/**
+	 * [findById description]
+	 * @param  {[type]}   table    [description]
+	 * @param  {[type]}   data     [description]
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
 	findById: function(table, data, callback) {
 		var db = new sqlite3.Database(AppSettings.database);
 		var query = 'SELECT * FROM ' + table + ' WHERE ' + table + '_id = ?';
@@ -90,34 +118,219 @@ var Database = {
 		printLog(query, data);
 
 		db.serialize(function() {
-			db.get(query, data, callback);
+			db.get(query, data, function(err, row) {
+				var item = {};
+				if (err === null ) {
+					_.keys(row).forEach(function(key, index) {
+						item[reverseTransform(key)] = row[key];
+					});
+				}
+
+				callback(err, item);
+			});
 		});
 
 		db.close();
 	},
 
-	selectAll: function(table, data, callback, complete) {
+	/**
+	 * [findAll description]
+	 * @param  {[type]}   table    [description]
+	 * @param  {[type]}   data     [description]
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
+	findAll: function(table, data, callback) {
 		var db = new sqlite3.Database(AppSettings.database);
-		var queryC = 'SELECT COUNT(*) AS total FROM ' + table;
-		var queryS = 'SELECT * FROM ' + table + ' LIMIT ? OFFSET ?' ;
+		var selectStm = 'SELECT * FROM ' + table + ' LIMIT ? OFFSET ?' ;
 
 		var page = data.page;
 		var limit = AppSettings.itemsPerPage[table];
 		var offset = data.page * limit;
+		var result = {
+			page: page,
+			hasMore: false,
+			total: null,
+			items: []
+		};
 
-		printLog(queryC);
-		printLog(queryS, [limit, offset]);
+		printLog(selectStm, [limit, offset]);
 
-		// TODO: update to be pagination ready
 		db.serialize(function() {
-			db.get(queryC, [], callback);
-			db.each(queryS, [limit, offset], callback, complete);
+			db.each(selectStm, [limit, offset],
+				function(err, row) {
+					var item = {};
+					_.keys(row).forEach(function(key, index) {
+						item[reverseTransform(key)] = row[key];
+					});
+
+					result.items.push(item);
+				},
+				function(err, total) {
+					callback(err, result);
+				}
+			);
+		});
+
+		db.close();
+	},
+
+	/**
+	 * [findByConditions description]
+	 * @param  {[type]}   table    [description]
+	 * @param  {[type]}   data     [description]
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
+	findByConditions: function(table, data, callback) {
+		var db = new sqlite3.Database(AppSettings.database);
+		var columns = getColumns(data.conditions);
+		var selectStm = 'SELECT * FROM ' + table;
+
+		if (columns.length > 0) {
+			var whereStm = columns.join(' = ?, ') + ' = ?';
+			selectStm += ' WHERE ' + whereStm + ' LIMIT ? OFFSET ?';
+		} else {
+			selectStm += ' LIMIT ? OFFSET ?';
+		}
+
+		var page = data.page;
+		var limit = AppSettings.itemsPerPage[table] || 10;
+		var offset = data.page * limit;
+		var values = _.values(data.conditions);
+		var result = {
+			page: page,
+			hasMore: false,
+			total: null,
+			items: []
+		};
+
+		printLog(selectStm, values.concat([limit, offset]));
+
+		db.serialize(function() {
+			db.each(selectStm, values.concat([limit, offset]),
+				function(err, row) {
+					var item = {};
+					_.keys(row).forEach(function(key, index) {
+						item[reverseTransform(key)] = row[key];
+					});
+
+					result.items.push(item);
+				},
+				function(err, total) {
+					callback(err, result);
+				}
+			);
+		});
+
+		db.close();
+	},
+
+	/**
+	 * [leftJoin description]
+	 * @param  {[type]}   tableA   [description]
+	 * @param  {[type]}   tableB   [description]
+	 * @param  {[type]}   data     [description]
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
+	leftJoin: function(tableA, tableB, data, callback) {
+		var db = new sqlite3.Database(AppSettings.database);
+
+		var onStm = 'b.' + tableA + '_id = a.' + tableA + '_id';
+		var whereStm = 'b.' + tableB + '_id = ?';
+		var selectStm = 'SELECT * FROM ' + tableA + ' a LEFT JOIN ' + tableA + '_' + tableB + ' b ON ' + onStm + ' WHERE ' + whereStm + ' LIMIT ? OFFSET ?';
+
+		var page = data.page;
+		var limit = AppSettings.itemsPerPage[tableA];
+		var offset = data.page * limit;
+		var values = _.values(data.conditions);
+		var result = {
+			page: page,
+			hasMore: false,
+			total: null,
+			items: []
+		};
+
+		printLog(selectStm, values.concat([limit, offset]));
+
+		db.serialize(function() {
+			db.each(selectStm, values.concat([limit, offset]),
+				function(err, row) {
+					var item = {};
+					_.keys(row).forEach(function(key, index) {
+						item[reverseTransform(key)] = row[key];
+					});
+
+					result.items.push(item);
+				},
+				function(err, total) {
+					callback(err, result);
+				}
+			);
+		});
+
+		db.close();
+	},
+
+	countAll: function(table, callback) {
+		var db = new sqlite3.Database(AppSettings.database);
+		var countStm = 'SELECT COUNT(*) AS total FROM ' + table;
+
+		printLog(countStm);
+
+		db.serialize(function() {
+			db.get(countStm, [], callback);
+		});
+
+		db.close();
+	},
+
+	countByConditions: function(table, data, callback) {
+		var db = new sqlite3.Database(AppSettings.database);
+		var columns = getColumns(data.conditions);
+		var countStm = 'SELECT COUNT(*) AS total FROM ' + table;
+
+		if (columns.length > 0) {
+			var whereStm = getColumns(data.conditions).join(' = ?, ') + ' = ?';
+			countStm += ' WHERE ' + whereStm;
+		}
+
+		var values = _.values(data.conditions);
+
+		printLog(countStm, values);
+
+		db.serialize(function() {
+			db.get(countStm, values, callback);
+		});
+
+		db.close();
+	},
+
+	countLeftJoin: function(tableA, tableB, data, callback) {
+		var db = new sqlite3.Database(AppSettings.database);
+
+		var onStm = 'b.' + tableA + '_id = a.' + tableA + '_id';
+		var whereStm = 'b.' + tableB + '_id = ?';
+		var countStm = 'SELECT COUNT(*) AS total FROM ' + tableA + ' a LEFT JOIN ' + tableA + '_' + tableB + ' b ON ' + onStm + ' WHERE ' + whereStm;
+
+		var values = _.values(data.conditions);
+
+		printLog(countStm, values);
+
+		db.serialize(function() {
+			db.get(countStm, values, callback);
 		});
 
 		db.close();
 	}
 };
 
+/**
+ * [transform description]
+ * @param  {[type]} input [description]
+ * @return {[type]}       [description]
+ */
 var transform = function transfromJsNameToDatabaseName(input) {
 	var output = input;
 	var regex = /[a-z][A-Z]/g;
@@ -131,6 +344,29 @@ var transform = function transfromJsNameToDatabaseName(input) {
 	return output.toLowerCase();
 };
 
+/**
+ * [reverseTransform description]
+ * @param  {[type]} input [description]
+ * @return {[type]}       [description]
+ */
+var reverseTransform = function transfromDatabaseNameToJsName(input) {
+	var output = input;
+	var regex = /[a-z]_[a-z]/g;
+	var match = regex.exec(output);
+
+	if (match !== null) {
+		output = input.slice(0, regex.lastIndex-2) + input.slice(regex.lastIndex-1, regex.lastIndex).toUpperCase() + input.slice(regex.lastIndex);
+		output = transform(output);
+	}
+
+	return output;
+};
+
+/**
+ * [getColumns description]
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
 var getColumns = function getTableColumns(data) {
 	var keys = [];
 	_.keys(data).forEach(function(item, index) {
@@ -140,6 +376,12 @@ var getColumns = function getTableColumns(data) {
 	return keys;
 };
 
+/**
+ * [printLog description]
+ * @param  {[type]} query  [description]
+ * @param  {[type]} values [description]
+ * @return {[type]}        [description]
+ */
 var printLog = function printLog(query, values) {
 	console.log('Query: ', query);
 	console.log('Values: ', values);

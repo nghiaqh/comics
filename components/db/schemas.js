@@ -9,7 +9,8 @@ var schemas = {
 		collectionId: null,
 		userId: null,
 		title: null,
-		coverPicture: null
+		coverPicture: null,
+		updatedDate: null
 	},
 	book: {
 		bookId: null,
@@ -17,7 +18,9 @@ var schemas = {
 		description: null,
 		numberOfChapters: null,
 		publishedDate: null,
-		coverPicture: null
+		coverPicture: null,
+		seriesId: null,
+		updatedDate: null
 	},
 	chapter: {
 		chapterId: null,
@@ -25,7 +28,8 @@ var schemas = {
 		number: null,
 		bookId: null,
 		description: null,
-		coverPicture: null
+		coverPicture: null,
+		publishedDate: null
 	},
 	author: {
 		authorId: null,
@@ -40,13 +44,41 @@ var schemas = {
 	},
 	picture: {
 		pictureId: null,
-		uri: null
+		uri: null,
+		title: null,
+		description: null,
+		pageNumber: null,
+		chapterId: null,
+		publishedDate: null
 	},
 	series: {
 		seriesId: null,
 		title: null,
-		coverPicture: null
+		description: null,
+		coverPicture: null,
+		publishedDate: null,
+		updatedDate: null
 	},
+	bookAuthor: {
+		bookId: null,
+		authorId: null,
+	},
+	bookGenre: {
+		bookdId: null,
+		genreId: null
+	},
+	bookCollection: {
+		bookId: null,
+		collectionId: null
+	},
+	chapterCollection: {
+		chapterId: null,
+		collectionId: null
+	},
+	pictureCollection: {
+		pictureId: null,
+		collectionId: null
+	}
 };
 
 module.exports = schemas;

@@ -27,7 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 
 var Book = require('./components/book/index');
+var Chapter = require('./components/chapter/index');
+var Picture = require('./components/picture/index');
+
 app.use('/api/books', Book.api);
+app.use('/api/chapters', Chapter.api);
+app.use('/api/pictures', Picture.api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

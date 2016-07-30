@@ -31,7 +31,8 @@ var setup = {
 				collection_id INTEGER PRIMARY KEY AUTOINCREMENT, \
 				user_id INTEGER REFERENCES user(user_id) ON UPDATE CASCADE ON DELETE SET NULL, \
 				title TEXT NOT NULL, \
-				cover_picture TEXT)',
+				cover_picture TEXT, \
+				updated_date TIMESTAMP NOT NULL)',
 				function(err, row) {
 					if (err !== null) {
 						console.log('Setup error (2): ', err);
@@ -42,7 +43,10 @@ var setup = {
 			db.run('CREATE TABLE IF NOT EXISTS series ( \
 				series_id INTEGER PRIMARY KEY AUTOINCREMENT, \
 				title TEXT NOT NULL, \
-				cover_picture TEXT)',
+				description TEXT, \
+				cover_picture TEXT, \
+				published_date TIMESTAMP, \
+				updated_date TIMESTAMP NOT NULL)',
 				function(err, row) {
 					if (err !== null) {
 						console.log('Setup error (3): ', err);
@@ -55,9 +59,10 @@ var setup = {
 				title TEXT NOT NULL, \
 				description TEXT, \
 				number_of_chapters INTEGER DEFAULT 1 CHECK(number_of_chapters > 0), \
-				published_date DATE, \
+				published_date TIMESTAMP, \
 				cover_picture TEXT, \
-				series_id INTEGER REFERENCES series(series_id) ON UPDATE CASCADE ON DELETE CASCADE)',
+				series_id INTEGER REFERENCES series(series_id) ON UPDATE CASCADE ON DELETE CASCADE, \
+				updated_date TIMESTAMP NOT NULL)',
 				function(err, row) {
 					if (err !== null) {
 						console.log('Setup error (4): ', err);
@@ -71,7 +76,8 @@ var setup = {
 				title TEXT, \
 				book_id INTEGER REFERENCES book(book_id) ON UPDATE CASCADE ON DELETE CASCADE, \
 				description TEXT, \
-				cover_picture TEXT)',
+				cover_picture TEXT, \
+				published_date TIMESTAMP NOT NULL)',
 				function(err, row) {
 					if (err !== null) {
 						console.log('Setup error (5): ', err);
@@ -104,7 +110,12 @@ var setup = {
 
 			db.run('CREATE TABLE IF NOT EXISTS picture ( \
 				picture_id INTEGER PRIMARY KEY AUTOINCREMENT, \
-				uri TEXT NOT NULL)',
+				uri TEXT NOT NULL, \
+				title TEXT, \
+				description TEXT, \
+				page_number INTEGER NOT NULL, \
+				chapter_id INTEGER REFERENCES chapter(chapter_id) ON UPDATE CASCADE ON DELETE CASCADE, \
+				published_date TIMESTAMP NOT NULL)',
 				function(err, row) {
 					if (err !== null) {
 						console.log('Setup error (8): ', err);
@@ -152,23 +163,12 @@ var setup = {
 				}
 			);
 
-			db.run('CREATE TABLE IF NOT EXISTS picutre_collection ( \
+			db.run('CREATE TABLE IF NOT EXISTS picture_collection ( \
 				picture_id INTEGER REFERENCES picture(picture_id) ON UPDATE CASCADE ON DELETE CASCADE, \
 				collection_id INTEGER REFERENCES collection(collection_id) ON UPDATE CASCADE ON DELETE CASCADE)',
 				function(err, row) {
 					if (err !== null) {
 						console.log('Setup error (13): ', err);
-					}
-				}
-			);
-
-			db.run('CREATE TABLE IF NOT EXISTS picutre_chapter ( \
-				picture_id INTEGER REFERENCES picture(picture_id) ON UPDATE CASCADE ON DELETE CASCADE, \
-				chapter_id INTEGER REFERENCES chapter(chapter_id) ON UPDATE CASCADE ON DELETE CASCADE, \
-				order_in_chapter INTEGER NOT NULL CHECK(order_in_chapter > 0))',
-				function(err, row) {
-					if (err !== null) {
-						console.log('Setup error (14): ', err);
 					}
 				}
 			);
