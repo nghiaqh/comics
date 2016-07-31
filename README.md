@@ -1,40 +1,47 @@
 # About
-Testing express, gulp and jade
+Testing express, gulp, jade, backbone, webpack
+
+## Quick start
 
 0. Install nvm, node, npm
-
 1. Install dependencies
-
 	```
 	npm install
 	```
-
 2. Start server:
-
 	```
 	gulp
 	```
 
-## Cheatsheet
+## Isomorphic architecture
 
-```
-npm dedupe
-```
+###1. Concept:
 
-## Errors & solutions:
-
-1. __Fatal error: watch ENOSPC__
-
-	Caused by system reach limitation of how many files can be watched by a user.
-	To check the max number of inotify watches:
+	The application state and code is shared between client and server. After the server has received the request, it creates a new application instance and renders the view. Then it passes the state of the storages into the rendered HTML output.
 	```
-	cat /proc/sys/fs/inotify/max_user_watches
+	<script>var STATE = ... </script>
 	```
 
-	Run `npm dedupe` to walk through your npm module tree and moves every package up in the tree as much as possible. The result is a flat tree.
-	Or permanently increase max number of inotify watches of your system:
-	```
-	echo 524288 | sudo tee -a /proc/sys/fs/inotify/max_user_watches
-	```
+	The client loads the same code (which is built with Webpack or Browserify) and bootstraps the application from the shared state. The shared state is created by server and injected into the global scope as above. It means that our application can continue from the point where the server has finished.
 
-2.
+	The user gets a fully rendered site at the first load like traditional app, but also able to continue the surfing with a super fast Single-page application (SPA).
+
+	*Essentially:*
+
+	* There is still code separation. We only take down the boundary between client and server code so that the libraries, testing and language can be reused.
+	* Three things are supplied to client: pre-rendered view, raw data and the code to turn the raw data into the pre-rendered view.
+
+	*Pros:*
+
+	* Faster perceived load time: the page loads immediately to the user as no wait time for app to bootstrap. And SPA interactivity.
+	* Search engine indexability: as the result of server side rendering.
+	* Free progressive enhancements: page still works if js is disabled on client side.
+	* Easier code maintenace: same code base to a certain extend.
+
+	*Cons:*
+
+	*
+	*
+
+###2. Implementation:
+

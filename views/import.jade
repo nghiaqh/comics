@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	h1 Import mangas that are uploaded on server
+
+	.container
+		form#form-l(action='#', method='get')
+			label(for='path') Enter directory path
+			input#path(
+				type='text'
+				name='path'
+				placeholder='~/Pictures/'
+			)
+			button#submit Import

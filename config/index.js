@@ -1,7 +1,7 @@
 settings = {
 	database: 'app.db',
 	itemsPerPage: {
-		book: 2,
+		book: 24,
 		chapter: 50,
 		picture: 40,
 		author: 50,

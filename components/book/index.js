@@ -1,10 +1,10 @@
 /**
  * book/index.js
  */
-var model = require('./book');
 var api = require('./api');
+var router = require('./router');
 
 module.exports = {
 	api: api,
-	model: model
+	router: router
 };
