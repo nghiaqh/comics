@@ -1,4 +1,3 @@
-require('es6-promise').polyfill();
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var fork = require('child_process').fork;
@@ -82,9 +81,10 @@ var app = {
 	start: function(callback) {
 		process.execArgv.push('--harmony');
 
-		app.instance = fork(app.path, {silent: true, env: app.env});
-		app.instance.stdout.pipe(process.stdout);
-		app.instance.stderr.pipe(process.stderr);
+		app.instance = fork(app.path, {silent: false, env: app.env}, function(stdout, stderr) {
+			console.log('stdout: ' + stdout);
+  		console.log('stderr: ' + stderr);
+		});
 
 		gutil.log(gutil.colors.cyan('Starting'), 'express server (PID:', app.instance.pid, ')');
 
