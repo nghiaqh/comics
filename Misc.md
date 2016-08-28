@@ -1,4 +1,5 @@
 ## Errors & solutions:
+
 1. __Fatal error: watch ENOSPC__
 	Caused by system reach limitation of how many files can be watched by a user.
 	To check the max number of inotify watches:
@@ -11,3 +12,8 @@
 	echo 524288 | sudo tee -a /proc/sys/fs/inotify/max_user_watches
 	```
 2.
+
+
+## Webpack
+
+Loader == task in grunt

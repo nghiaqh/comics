@@ -3,7 +3,7 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var fork = require('child_process').fork;
 var jshint = require ('gulp-jshint');
-var stylus = require('gulp-stylus');
+// var stylus = require('gulp-stylus');
 var tinyLr = require('tiny-lr');
 var async = require('async');
 
@@ -11,12 +11,14 @@ var dirs = {
 	app: {
 		template: [
 			'views/{,*/}*.jade',
+			'components/{,*/}*.jade',
 		],
 		js: [
 			'routes/{,*/}*.js',
 			'components/{,*/}*.js',
 			'helpers/{,*/}*.js',
 			'middlewares/{,*/}*.js',
+			'client/{,*/}*.js',
 			'app.js'
 		],
 		css: [
@@ -38,13 +40,13 @@ gulp.task('jshint', function() {
 });
 
 // Stylus
-gulp.task('stylus', function() {
-	return gulp.src('public/stylesheets/style.styl')
-		.pipe(stylus({
-			compress: true
-		}))
-		.pipe(gulp.dest('public/stylesheets'));
-});
+// gulp.task('stylus', function() {
+// 	return gulp.src('public/stylesheets/style.styl')
+// 		.pipe(stylus({
+// 			compress: true
+// 		}))
+// 		.pipe(gulp.dest('public/stylesheets'));
+// });
 
 var livereload = {
 	instance: null,
@@ -123,7 +125,7 @@ gulp.task('server', function(callback) {
 
 gulp.task('watch', function() {
 	gulp.watch(dirs.app.js, ['jshint', app.restart]);
-	gulp.watch('public/stylesheets/style.styl', ['stylus']);
+	// gulp.watch('public/stylesheets/style.styl', ['stylus']);
 	gulp.watch(dirs.public, livereload.changed);
 });
 

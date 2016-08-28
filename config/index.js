@@ -1,4 +1,4 @@
-settings = {
+var settings = {
 	database: 'app.db',
 	itemsPerPage: {
 		book: 24,
