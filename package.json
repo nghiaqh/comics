@@ -13,12 +13,15 @@
     "jade": "~1.11.0",
     "jquery": "^3.1.0",
     "morgan": "~1.7.0",
+    "node-dir": "^0.1.16",
     "serve-favicon": "~2.3.0",
     "sqlite3": "^3.1.4",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
     "async": "^2.0.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-react": "^6.11.1",
     "connect-livereload": "^0.5.4",
     "css-loader": "^0.23.1",
     "gulp": "^3.9.1",

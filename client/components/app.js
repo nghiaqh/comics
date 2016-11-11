@@ -1,10 +1,11 @@
-import React, {Component} from 'react';
-import {} from './style.styl';
+'use strict'
 
-class App extends Component {
-	render() {
-		return <div>Hello world</div>;
+var React = require('react');
+
+module.exports = React.createClass({
+	render: function() {
+		return (
+			<div>Hello world</div>
+		);
 	}
-}
-
-export default App;
+});
