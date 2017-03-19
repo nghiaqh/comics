@@ -188,7 +188,8 @@ var Database = {
 		var selectStm = 'SELECT * FROM ' + table;
 
 		if (columns.length > 0) {
-			var whereStm = columns.join(' = ?, ') + ' = ?';
+			var operator = data.operator || '=';
+			var whereStm = columns.join(' ' + operator + ' ?, ') + ' = ?';
 			selectStm += ' WHERE ' + whereStm + ' LIMIT ? OFFSET ?';
 		} else {
 			selectStm += ' LIMIT ? OFFSET ?';

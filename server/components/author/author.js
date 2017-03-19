@@ -8,10 +8,10 @@ var AppSettings = require('../../config/index');
 
 // Define a Author
 var Author = function(data) {
-	this.data = sanitize(data, schemas.Author);
+	this.data = sanitize(data, schemas.author);
 };
 
-Author.prototype.data = schemas.Author;
+Author.prototype.data = schemas.author;
 
 // save
 Author.prototype.save = function(callback) {
@@ -65,6 +65,36 @@ Author.findByBook = function(bookId, page, callback) {
 		}
 	});
 };
+
+/**
+ * Find all authors with certain pen names
+ * @param  {string}   name     e.g. pen1, pen2
+ * @param  {integer}   page     if there's many results, they are divided into pages
+ * @param  {Function} callback handle error and results
+ * @return
+ */
+Author.findByName = function(name, page, callback) {
+	page = page || 0;
+	var data = {
+		page: page,
+		conditions: { penName: name + ',%' },
+		operator: 'LIKE'
+	};
+
+	Database.countByConditions('Author', data, function(err, row) {
+		if (err !== null) {
+			callback(err);
+		}	else {
+			var total = row.total;
+
+			Database.findByConditions('Author', data, function(err, result) {
+				result.hasMore = total > (page + 1) * AppSettings.itemsPerPage.Author;
+				result.total = total;
+				callback(err, result);
+			});
+		}
+	});
+}
 
 // map input with schema
 var	sanitize = function(data, schema) {

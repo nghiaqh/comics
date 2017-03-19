@@ -1,11 +1,12 @@
 'use strict'
 
-var React = require('react');
+import React from 'react';
+import styles from './style.styl';
 
-module.exports = React.createClass({
-	render: function() {
-		return (
-			<div>Hello world</div>
-		);
-	}
-});
+const App = () => (
+  <div className={styles.app}>
+    <h2>Hello, </h2>
+  </div>
+);
+
+export default App;

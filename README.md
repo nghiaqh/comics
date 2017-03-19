@@ -1,5 +1,5 @@
 # About
-Testing express, gulp, jade, backbone, webpack
+Testing express, webpack, react
 
 ## Quick start
 
@@ -44,4 +44,3 @@ Testing express, gulp, jade, backbone, webpack
 	*
 
 ###2. Implementation:
-
