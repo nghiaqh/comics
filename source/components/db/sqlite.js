@@ -4,7 +4,7 @@
 var AppSettings = require('../../config/index');
 var schemas = require('./schemas');
 var sqlite3 = require('sqlite3').verbose();
-var _ = require('underscore');
+var _ = require('lodash');
 
 var Database = {
 

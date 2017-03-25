@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var Picture = require('./picture');
-var _ = require('underscore');
+var _ = require('lodash');
 
 /* GET multiple pictures */
 router.get('/', function(req, res, next) {

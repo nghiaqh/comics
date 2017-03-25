@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var Chapter = require('./chapter');
-var _ = require('underscore');
+var _ = require('lodash');
 
 /* GET all chapters */
 router.get('/', function(req, res, next) {

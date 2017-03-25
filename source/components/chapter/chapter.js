@@ -1,7 +1,7 @@
 /*jslint node: true */
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 var schemas = require('../db/schemas');
 var Database = require('../db/sqlite');
 var AppSettings = require('../../config/index');
