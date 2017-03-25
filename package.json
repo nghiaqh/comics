@@ -31,7 +31,6 @@
     "css-loader": "^0.27.3",
     "extract-text-webpack-plugin": "^2.1.0",
     "react-hot-loader": "^3.0.0-beta.6",
-    "standard": "^9.0.2",
     "style-loader": "^0.13.1",
     "stylus": "^0.54.5",
     "stylus-loader": "^2.1.2",
