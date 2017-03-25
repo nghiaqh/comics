@@ -1,8 +1,8 @@
 /**
  * picture/index.js
  */
-var api = require('./api');
+var api = require('./api')
 
 module.exports = {
-	api: api
-};
+  api: api
+}

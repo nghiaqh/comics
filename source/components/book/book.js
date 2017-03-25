@@ -2,8 +2,8 @@
 'use strict';
 
 var _ = require('lodash');
-var schemas = require('../db/schemas');
-var Database = require('../db/sqlite');
+var schemas = require('../database/schemas');
+var Database = require('../database/sqlite');
 var AppSettings = require('../../config/index');
 
 // Define a book

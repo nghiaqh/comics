@@ -3,7 +3,7 @@
 const express = require('express')
 const router = express.Router()
 const Book = require('./book')
-const schemas = require('../db/schemas')
+const schemas = require('../database/schemas')
 const path = require('path')
 
 /* GET all books */

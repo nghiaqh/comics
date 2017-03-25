@@ -17,6 +17,7 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
     "jade": "^1.11.0",
+    "knex": "^0.12.9",
     "lodash": "4.17.4",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
