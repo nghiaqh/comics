@@ -2,7 +2,7 @@ const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 
 // This plugin to generate css bundle so we can load css async instead of waiting for Js bundle to be loaded.
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+// const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
 
 // Shared settings between frontend and backend
@@ -28,25 +28,29 @@ const frontendConfig = {
   },
   module: {
     rules: [
-      {
-        test: /\.styl$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            'style-loader',
-            'css-loader',
-            'stylus-loader'
-          ]
-        })
-      },
+      // {
+      //   test: /\.styl$/,
+      //   use: ExtractTextPlugin.extract({
+      //     use: [
+      //       'style-loader',
+      //       'css-loader',
+      //       'stylus-loader'
+      //     ]
+      //   })
+      // },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/,
+          /components\/book\/*/,
+          /source\/components\/chapter\/*/,
+          /source\/components\/picture\/*/,
+          /source\/components\/database\/sqlite.js/],
         use: [ 'babel-loader' ]
       }
     ]
   },
   plugins: [
-    new ExtractTextPlugin('styles.css'),
+    // new ExtractTextPlugin('styles.css'),
     new webpack.optimize.CommonsChunkPlugin({
       name: ['commons', 'manifest'], // Specify the common bundle's name.
       filename: 'commons.js',

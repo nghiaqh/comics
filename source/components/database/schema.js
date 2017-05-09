@@ -1,4 +1,4 @@
-var schemas = {
+export const schema = {
   user: {
     userId: null,
     username: null,
@@ -33,9 +33,9 @@ var schemas = {
   },
   author: {
     authorId: null,
-    penName: null,
+    name: null,
     bio: null,
-    coverPicture: null
+    photo: null
   },
   genre: {
     genreId: null,
@@ -80,5 +80,3 @@ var schemas = {
     collectionId: null
   }
 }
-
-module.exports = schemas

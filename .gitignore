@@ -1,4 +1,4 @@
 node_modules
-app.db
+comics.db
 build
 npm-debug.log

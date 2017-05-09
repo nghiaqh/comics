@@ -1,6 +1,6 @@
-const Server = require('./server.js')
+import server from './server.js'
 const port = (process.env.PORT || 3000)
-const app = Server.app()
+const app = server()
 
 if (process.env.NODE_ENV !== 'production') {
   const webpack = require('webpack')

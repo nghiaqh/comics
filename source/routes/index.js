@@ -1,12 +1,13 @@
-/* jslint node: true */
-'use strict'
+import { author } from '../components/author/api'
 
-var express = require('express')
-var router = express.Router()
+const routes = require('express').Router()
+
+/* API */
+routes.use('/data/author', author)
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+routes.get('/', function (req, res, next) {
   res.render('index.jade', { title: 'Home page' })
 })
 
-module.exports = router
+export { routes }

@@ -1,13 +1,10 @@
-/* jslint node: true */
-'use strict'
-var express = require('express')
-var router = express.Router()
-var Author = require('./author')
+const router = require('express').Router()
+const Author = require('./author')
 
 /* GET all authors */
 router.get('/', function (req, res, next) {
   if (!isNaN(parseInt(req.query.book)) && parseInt(req.query.book) > 0) {
-    var page = req.query.page || 0
+    const page = req.query.page || 0
 
     Author.findByBook(req.query.book, page, function (err, result) {
       if (err !== null) {
@@ -23,7 +20,7 @@ router.get('/', function (req, res, next) {
 
 /* POST create an author */
 router.post('/', function (req, res, next) {
-  var author = new Author(req.body)
+  const author = new Author(req.body)
 
   author.save(function (err) {
     if (err !== null) {
@@ -48,7 +45,7 @@ router.get('/:authorId', function (req, res, next) {
 
 /* PUT update a author */
 router.put('/:authorId', function (req, res, next) {
-  var author = new Author(req.body)
+  const author = new Author(req.body)
   author.data.authorId = req.params.authorId
 
   author.save(function (err) {
@@ -62,7 +59,7 @@ router.put('/:authorId', function (req, res, next) {
 
 /* DELETE delete a author */
 router.delete('/:authorId', function (req, res, next) {
-  var author = new Author({ authorId: req.params.authorId })
+  const author = new Author({ authorId: req.params.authorId })
   author.delete(function (err) {
     if (err !== null) {
       res.status(400).json(err)

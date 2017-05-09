@@ -1,5 +1,4 @@
 var settings = {
-  database: 'app.db',
   itemsPerPage: {
     book: 24,
     chapter: 50,
