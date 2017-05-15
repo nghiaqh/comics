@@ -13,13 +13,13 @@ class Author extends PersistedModel {
 
   save () {
     if (typeof this.id === 'undefined') {
-      this.insert({
+      return this.insert({
         name: this.name,
         bio: this.bio,
         photo: this.photo
       })
     } else {
-      this.update({
+      return this.update({
         id: this.id,
         name: this.name,
         bio: this.bio,

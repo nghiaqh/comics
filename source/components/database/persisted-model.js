@@ -4,7 +4,7 @@ const knex = require('knex')(config[environment])
 const defaultTimeout = 1000
 
 class PersistedModel {
-  construct (table) {
+  constructor (table) {
     this.table = table
   }
 

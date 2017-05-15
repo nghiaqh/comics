@@ -1,9 +1,9 @@
-import { author } from '../components/author/api'
+import { author } from '../components/author'
 
 const routes = require('express').Router()
 
 /* API */
-routes.use('/data/author', author)
+routes.use('/api/author', author)
 
 /* GET home page. */
 routes.get('/', function (req, res, next) {
