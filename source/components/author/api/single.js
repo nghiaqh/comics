@@ -11,9 +11,9 @@ function createOne (req, res, next) {
   const author = new Author(req.body.name, req.body.bio, req.body.photo)
   author.save().then(data => {
     author.id = data
-    res.json({ status: 200, message: 'Created an author', data: author })
+    res.json({ status: 200, message: 'Created a new author', data: author })
   }).catch(err => {
-    res.json({ status: 400, message: 'Failed to create author', error: err })
+    res.json({ status: 400, message: err.message })
   })
 }
 

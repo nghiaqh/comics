@@ -6,25 +6,43 @@ const PersistedModel = require('../database/persisted-model')
 class Author extends PersistedModel {
   constructor (name, bio, photo) {
     super('author')
-    this.name = name
-    this.bio = bio
-    this.photo = photo
+    this.name = name.trim()
+    this.bio = bio.trim()
+    this.photo = photo.trim()
   }
 
   save () {
-    if (typeof this.id === 'undefined') {
-      return this.insert({
-        name: this.name,
-        bio: this.bio,
-        photo: this.photo
-      })
+    const author = this
+    const promise = new Promise((resolve, reject) => {
+      if (this.validate()) {
+        if (typeof author.id === 'undefined') {
+          resolve(author.insert({
+            name: author.name,
+            bio: author.bio,
+            photo: author.photo
+          }))
+        } else {
+          resolve(author.update({
+            id: author.id,
+            name: author.name,
+            bio: author.bio,
+            photo: author.photo
+          }))
+        }
+      } else {
+        reject(new Error(author.invalidReason))
+      }
+    })
+
+    return promise
+  }
+
+  validate () {
+    if (this.name === '' || this.name === null || typeof this.name === 'undefined') {
+      this.invalidReason = 'Author\'s name cannot be empty'
+      return false
     } else {
-      return this.update({
-        id: this.id,
-        name: this.name,
-        bio: this.bio,
-        photo: this.photo
-      })
+      return true
     }
   }
 
