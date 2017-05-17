@@ -49,11 +49,18 @@ class PersistedModel {
    *   1. an object: { id: 1 },
    *   2. a function: function () {
    *     this.where('published_date', '<', 2000).orWhere(...).whereNot(...)
-   *   },
-   *   3. a list of parameter, e.g 'published_date', '<', 2000
+   *   }
    */
-  static delete (table, ...where) {
+  static delete (table, where) {
     return knex(table).where(where).del().timeout(defaultTimeout)
+  }
+
+  /**
+   * Delete a record by its primay key id
+   * @type {String}
+   */
+  static deleteById (table, id) {
+    return knex(table).where(table + '_id', '=', id).del().timeout(defaultTimeout)
   }
 
   /**

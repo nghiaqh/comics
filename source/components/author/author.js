@@ -46,12 +46,16 @@ class Author extends PersistedModel {
     }
   }
 
-  static delete (...where) {
-    super.delete('author', where)
+  static delete (where) {
+    return super.delete('author', where)
+  }
+
+  static deleteById (id) {
+    return super.deleteById('author', id)
   }
 
   static findById (id) {
-    super.findBy('author', id)
+    return super.findBy('author', id)
   }
 }
 
