@@ -62,6 +62,8 @@ exports.up = function (knex, Promise) {
       table.increments('page_id')
       table.integer('number')
       table.text('src').notNullable()
+      table.integer('book_id').unsigned().notNullable()
+      table.foreign('book_id').references('book.book_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.integer('chapter_id').unsigned().notNullable()
       table.foreign('chapter_id').references('chapter.chapter_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
@@ -116,7 +118,15 @@ exports.up = function (knex, Promise) {
       table.foreign('book_id').references('book.book_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.integer('collection_id').unsigned().notNullable()
       table.foreign('collection_id').references('collection.collection_id').onUpdate('CASCADE').onDelete('CASCADE')
-    }).then(res => console.log('Created "book_collection" table')).catch(err => console.log(err))
+    }).then(res => console.log('Created "book_collection" table')).catch(err => console.log(err)),
+
+    knex.schema.createTable('series_author', (table) => {
+      table.increments('id')
+      table.integer('series_id').unsigned().notNullable()
+      table.foreign('series_id').references('series.series_id').onUpdate('CASCADE').onDelete('CASCADE')
+      table.integer('author_id').unsigned().notNullable()
+      table.foreign('author_id').references('author.author_id').onUpdate('CASCADE').onDelete('CASCADE')
+    }).then(res => console.log('Created "series_author" table')).catch(err => console.log(err))
   ])
 }
 
@@ -125,12 +135,14 @@ exports.down = function (knex, Promise) {
     knex.schema.dropTable('book_collection'),
     knex.schema.dropTable('book_genre'),
     knex.schema.dropTable('book_author'),
-    knex.schema.dropTable('series'),
-    knex.schema.dropTable('book'),
-    knex.schema.dropTable('chapter'),
+    knex.schema.dropTable('series_author'),
     knex.schema.dropTable('page'),
+    knex.schema.dropTable('chapter'),
+    knex.schema.dropTable('book'),
+    knex.schema.dropTable('series'),
     knex.schema.dropTable('author'),
     knex.schema.dropTable('genre'),
+    knex.schema.dropTable('collection'),
     knex.schema.dropTable('user')
   ])
 }
