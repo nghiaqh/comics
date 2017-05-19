@@ -34,13 +34,12 @@ class PersistedModel {
    *   1. an object: { id: 1 },
    *   2. a function: function () {
    *     this.where('published_date', '<', 2000).orWhere(...).whereNot(...)
-   *   },
-   *   3. a list of parameter, e.g 'published_date', '<', 2000
+   *   }
    * @param {Array} columns list of column names
    * @param {Integer} timeout set a timeout for query
    */
-  select (columns = '*', limit, offset, ...where) {
-    return knex(this.table).where(where).select(columns).limit(limit).offset(offset).timeout(defaultTimeout)
+  static select (table, where, limit, offset, columns = '*') {
+    return knex(table).where(where).select(columns).limit(limit).offset(offset).timeout(defaultTimeout)
   }
 
   /**

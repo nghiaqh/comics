@@ -55,7 +55,13 @@ class Author extends PersistedModel {
   }
 
   static findById (id) {
-    return super.findBy('author', id)
+    return super.findById('author', id)
+  }
+
+  static findByName (authorName) {
+    return super.select('author', {
+      name: authorName
+    }, 1, 0)
   }
 }
 

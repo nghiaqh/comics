@@ -1,10 +1,22 @@
 const Author = require('../author')
 
 function getOne (req, res) {
-  const authorId = req.params.authorId * 1
-  const author = Author.findById(authorId)
+  let p
+  const id = req.params.authorId
 
-  res.status(200).json({ author })
+  if (Number.isInteger(id * 1)) {
+    p = Author.findById(id)
+  } else {
+    p = Author.findByName(id)
+  }
+
+  if (p) {
+    p.then(author => {
+      res.status(200).json({ author })
+    }).catch(err => {
+      res.json({ status: 400, message: err.message })
+    })
+  }
 }
 
 function createOne (req, res, next) {
