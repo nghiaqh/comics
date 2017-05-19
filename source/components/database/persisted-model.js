@@ -5,7 +5,9 @@ const defaultTimeout = 1000
 
 class PersistedModel {
   constructor (table) {
-    this.table = table
+    var _table = table
+    this.setTable = function (table) { _table = table }
+    this.getTable = function () { return _table }
   }
 
   /**
@@ -15,7 +17,8 @@ class PersistedModel {
    * @param {Integer} timeout set a timeout for query
    */
   insert (data, returning = '*') {
-    return knex(this.table).returning(returning).insert(data).timeout(defaultTimeout)
+    const table = this.getTable()
+    return knex(table).returning(returning).insert(data).timeout(defaultTimeout)
   }
 
   /**
@@ -24,7 +27,8 @@ class PersistedModel {
    * @param {Integer} timeout set a timeout for query
    */
   update (data) {
-    return knex(this.table).where(this.table + '_id', '=', this.id).update(data).timeout(defaultTimeout)
+    const table = this.getTable()
+    return knex(table).where(table + '_id', '=', this.id).update(data).timeout(defaultTimeout)
   }
 
   /**
@@ -68,6 +72,18 @@ class PersistedModel {
    */
   static findById (table, id, columns = '*') {
     return knex(table).where(table + '_id', '=', id).select(columns).limit(1).timeout(defaultTimeout)
+  }
+
+  normalise (data) {
+    if (typeof data === 'undefined') {
+      data = null
+    }
+
+    try {
+      data = data.trim()
+    } catch (e) {}
+
+    return data
   }
 }
 
