@@ -40,7 +40,7 @@ exports.up = function (knex, Promise) {
       table.text('cover_picture')
       table.text('description')
       table.integer('number_of_chapters')
-      table.integer('series_id').unsigned().notNullable()
+      table.integer('series_id').unsigned()
       table.foreign('series_id').references('series.series_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
