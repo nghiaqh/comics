@@ -81,7 +81,7 @@ class Author extends PersistedModel {
   static findByName (authorName) {
     return super.select('author', {
       name: authorName
-    }, 1, 0)
+    })
   }
 }
 

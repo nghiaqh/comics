@@ -42,7 +42,7 @@ class PersistedModel {
    * @param {Array} columns list of column names
    * @param {Integer} timeout set a timeout for query
    */
-  static select (table, where, limit, offset, columns = '*') {
+  static select (table, where, limit = 1, offset = 0, columns = '*') {
     return knex(table).where(where).select(columns).limit(limit).offset(offset).timeout(defaultTimeout)
   }
 
