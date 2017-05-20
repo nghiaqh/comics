@@ -102,4 +102,4 @@ function updateOne (req, res, next) {
   })
 }
 
-export { getOne, createOne, deleteOne, updateOne }
+export { createOne, getOne, deleteOne, updateOne }

@@ -1,5 +1,5 @@
 import { getAll } from './all'
-import { getOne, createOne, deleteOne, updateOne } from './single'
+import { createOne, getOne, deleteOne, updateOne } from './single'
 
 const author = require('express').Router()
 
