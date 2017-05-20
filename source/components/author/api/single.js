@@ -12,9 +12,9 @@ function getOne (req, res) {
 
   if (p) {
     p.then(author => {
-      res.status(200).json({ author })
+      res.status(200).json({ data: author })
     }).catch(err => {
-      res.json({ status: 400, message: err.message })
+      res.status(400).json({ message: err.message })
     })
   }
 }
@@ -23,9 +23,9 @@ function createOne (req, res, next) {
   const author = new Author(req.body.name, req.body.bio, req.body.photo)
   author.save().then(data => {
     author.id = data[0]
-    res.json({ status: 200, message: 'Created a new author', data: author })
+    res.status(200).json({ message: 'Created a new author', data: author })
   }).catch(err => {
-    res.json({ status: 400, message: err.message })
+    res.status(400).json({ message: err.message })
   })
 }
 
@@ -41,9 +41,9 @@ function deleteOne (req, res, next) {
 
   if (p) {
     p.then(data => {
-      res.json({ status: 200, message: 'Number of record deleted: ' + data })
+      res.status(200).json({ message: 'Number of record deleted: ' + data })
     }).catch(err => {
-      res.json({ status: 400, message: err.message })
+      res.status(400).json({ message: err.message })
     })
   }
 }
@@ -51,9 +51,9 @@ function deleteOne (req, res, next) {
 function updateOne (req, res, next) {
   const author = new Author(req.body.name, req.body.bio, req.body.photo, req.body.id)
   author.save().then(data => {
-    res.json({ status: 200, message: 'Updated an author', data: { number_of_records_affected: data } })
+    res.status(200).json({ message: 'Updated an author', data: { number_of_records_affected: data } })
   }).catch(err => {
-    res.json({ status: 400, message: err.message })
+    res.status(400).json({ message: err.message })
   })
 }
 

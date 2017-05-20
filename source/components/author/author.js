@@ -1,11 +1,12 @@
 const PersistedModel = require('../database/persisted-model')
+const settings = require('../../config')
 
 /**
  * Author class
  */
 class Author extends PersistedModel {
   constructor (name, bio, photo, id = null) {
-    super('author')
+    super('author') // set the mysql table name
     this.id = id
     this.name = name
     this.bio = bio
@@ -16,19 +17,17 @@ class Author extends PersistedModel {
     const author = this
     const test = this.validate()
     const promise = new Promise((resolve, reject) => {
-      if (test.isValid && !author.id) {
+      if (test.isValid && !author.id) { // no id, data valid, create new record
         resolve(author.insert({
           name: author.name,
           bio: author.bio,
           photo: author.photo
         }))
-      } else if (author.id) {
+      } else if (author.id) { // with id, update record with whatever valid field
         let data = this.prepareUpdateData()
         resolve(author.update(data))
-      } else if (test.isValid && !author.id) {
+      } else if (!test.isValid && !author.id) { // no id, data invalid, reject
         reject(new Error(test.message))
-      } else if (!author.id) {
-        reject(new Error('Author\'s id is invalid'))
       }
     })
 
@@ -82,6 +81,14 @@ class Author extends PersistedModel {
     return super.select('author', {
       name: authorName
     })
+  }
+
+  static list (limit = settings.itemsPerPage.author, offset = 0) {
+    return super.select('author', null, limit, offset)
+  }
+
+  static count () {
+    return super.count('author')
   }
 }
 

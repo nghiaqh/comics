@@ -43,6 +43,10 @@ class PersistedModel {
    * @param {Integer} timeout set a timeout for query
    */
   static select (table, where, limit = 1, offset = 0, columns = '*') {
+    if (where === null) {
+      return knex(table).select(columns).limit(limit).offset(offset).timeout(defaultTimeout)
+    }
+
     return knex(table).where(where).select(columns).limit(limit).offset(offset).timeout(defaultTimeout)
   }
 
@@ -74,6 +78,17 @@ class PersistedModel {
     return knex(table).where(table + '_id', '=', id).select(columns).limit(1).timeout(defaultTimeout)
   }
 
+  static count (table, column = null, where = null) {
+    column = column || table + '_id'
+
+    if (!where) {
+      return knex(table).count(column).timeout(defaultTimeout)
+    }
+
+    return knex(table).where(where).count(column).timeout(defaultTimeout)
+  }
+
+  // Utility function to preprocess data
   normalise (data) {
     if (typeof data === 'undefined') {
       data = null
