@@ -59,6 +59,7 @@ class PersistedModel {
    *   }
    */
   static delete (table, where) {
+    console.log(knex(table).where(where).del().timeout(defaultTimeout).toString())
     return knex(table).where(where).del().timeout(defaultTimeout)
   }
 

@@ -7,10 +7,10 @@ function getAll (req, res) {
   Promise.all([
     Author.count(),
     Author.list(limit, offset)
-  ]).then(values => {
+  ]).then(data => {
     res.status(200).json({
-      total: _.values(values[0][0])[0], // output integer value only
-      authors: values[1] // list of author records
+      total: _.values(data[0][0])[0], // output integer value only
+      authors: data[1] // list of author records
     })
   }).catch(err => {
     res.status(500).json({ message: err.message })

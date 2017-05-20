@@ -17,16 +17,18 @@ class Author extends PersistedModel {
     const author = this
     const test = this.validate()
     const promise = new Promise((resolve, reject) => {
-      if (test.isValid && !author.id) { // no id, data valid, create new record
-        resolve(author.insert({
+      if (test.isValid) {
+        const data = {
           name: author.name,
           bio: author.bio,
           photo: author.photo
-        }))
-      } else if (author.id) { // with id, update record with whatever valid field
-        let data = this.prepareUpdateData()
-        resolve(author.update(data))
-      } else if (!test.isValid && !author.id) { // no id, data invalid, reject
+        }
+        if (!author.id) { // no id, create new record
+          resolve(author.insert(data))
+        } else { // with id, update record with whatever valid field
+          resolve(author.update(data))
+        }
+      } else { // invalid author data
         reject(new Error(test.message))
       }
     })
@@ -45,24 +47,6 @@ class Author extends PersistedModel {
     } else {
       return { isValid: true }
     }
-  }
-
-  prepareUpdateData () {
-    let data = {}
-
-    if (this.name !== null && this.name !== '') {
-      data.name = this.name
-    }
-
-    if (this.bio !== null) {
-      data.bio = this.bio
-    }
-
-    if (this.photo !== null) {
-      data.photo = this.photo
-    }
-
-    return data
   }
 
   static delete (where) {
@@ -84,6 +68,8 @@ class Author extends PersistedModel {
   }
 
   static list (limit = settings.itemsPerPage.author, offset = 0) {
+    limit = limit || settings.itemsPerPage.author
+    offset = offset || 0
     return super.select('author', null, limit, offset)
   }
 
