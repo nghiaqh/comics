@@ -74,12 +74,17 @@ function updateOne (req, res, next) {
       res.status(404).json({ message: 'No author with ' + s + ' ' + id })
     } else {
       const author = new Author(data[0].name, data[0].bio, data[0].photo, data[0].author_id)
-      if (typeof req.body.name !== 'undefined')
+      if (typeof req.body.name !== 'undefined') {
         author.name = req.body.name
-      if (typeof req.body.bio !== 'undefined')
+      }
+
+      if (typeof req.body.bio !== 'undefined') {
         author.bio = req.body.bio
-      if (typeof req.body.name !== 'undefined')
+      }
+
+      if (typeof req.body.name !== 'undefined') {
         author.photo = req.body.photo
+      }
 
       author.save().then(data => {
         if (data) {
