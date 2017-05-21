@@ -1,4 +1,4 @@
 /**
- * chapter/index.js
+ * author/index.js
  */
 export * from './api'

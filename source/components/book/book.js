@@ -1,91 +1,87 @@
-// /*jslint node: true */
-// 'use strict';
-//
-// var _ = require('lodash');
-// var schemas = require('../database/schemas');
-// var Database = require('../database/sqlite');
-// var AppSettings = require('../../config/index');
-//
-// // Define a book
-// var Book = function(data) {
-// 	this.data = sanitize(data, schemas.book);
-// };
-//
-// Book.prototype.data = schemas.book;
-//
-// // save
-// Book.prototype.save = function(callback) {
-// 	if (validate(this.data, callback)) {
-// 		if (this.data.bookId === null) {
-// 			Database.insert('book', this.data, callback);
-// 		} else {
-// 			Database.update('book', this.data, callback);
-// 		}
-// 	}
-// };
-//
-// // delete
-// Book.prototype.delete = function(callback) {
-// 	if (this.data.id !== null) {
-// 		Database.delete('book', this.data.bookId, callback);
-// 	}
-// };
-//
-// // find a book by bookId
-// Book.findById = function(id, callback) {
-// 	Database.findById('book', id, callback);
-// };
-//
-// /**
-//  * return books by pagination
-//  * @param  {integer}  page     start from 0
-//  * @param  {Function} callback [description]
-//  * @return
-//  */
-// Book.getAll = function(page, conditions, callback) {
-// 	var data = {
-// 		page: page || 0,
-// 		conditions: conditions || {}
-// 	};
-//
-// 	Database.countByConditions('book', data, function(err, row) {
-// 		if (err !== null) {
-// 			callback(err);
-// 		}	else {
-// 			var total = row.total;
-//
-// 			Database.findByConditions('book', data, function(err, result) {
-// 				result.hasMore = total > (page + 1) * AppSettings.itemsPerPage.book;
-// 				result.total = total;
-// 				callback(err, result);
-// 			});
-// 		}
-// 	});
-// };
-//
-// // map input with schema
-// var	sanitize = function(data, schema) {
-// 	data = data || {};
-//
-// 	_.keys(data).forEach(function(key, index) {
-// 		if (typeof data[key] === 'string') {
-// 			data[key] = data[key].trim();
-// 		}
-// 	});
-//
-// 	data.updatedDate = Date.now();
-//
-// 	if (data.publishedDate !== null && data.publishedDate !== '') {
-// 		data.publishedDate = Date.parse(data.publishedDate);
-// 	}
-//
-// 	return _.pick(_.defaults(data, schema), _.keys(schema));
-// };
-//
-// var validate = function(data, callback) {
-// 	// TODO: implement data validation
-//
-// 	return true;
-// };
-//
-// module.exports = Book;
+const PersistedModel = require('../database/persisted-model')
+const settings = require('../../config')
+
+/**
+ * Book class
+ */
+class Book extends PersistedModel {
+  constructor (title, description, coverPicture, seriesId = null, bookId = null, numberOfChapters = null) {
+    super('book') // set the mysql table name
+    this.id = bookId
+    this.title = title
+    this.description = description
+    this.coverPicture = coverPicture
+    this.seriesId = seriesId
+    this.numberOfChapters = numberOfChapters
+  }
+
+  save () {
+    const book = this
+    const test = this.validate()
+    const promise = new Promise((resolve, reject) => {
+      if (test.isValid) {
+        const data = {
+          title: book.title,
+          description: book.description,
+          cover_picture: book.coverPicture,
+          series_id: book.seriesId,
+          number_of_chapters: book.numberOfChapters
+        }
+        if (!book.id) { // no id, create new record
+          resolve(book.insert(data))
+        } else { // with id, update record with whatever valid field
+          resolve(book.update(data))
+        }
+      } else { // invalid book data
+        reject(new Error(test.message))
+      }
+    })
+
+    return promise
+  }
+
+  validate () {
+    this.id = this.normalise(this.id)
+    this.title = this.normalise(this.title)
+    this.coverPicture = this.normalise(this.coverPicture)
+    this.description = this.normalise(this.description)
+    this.seriesId = this.normalise(this.seriesId)
+    this.numberOfChapters = this.normalise(this.numberOfChapters)
+
+    if (this.title === '' || this.title === null || typeof this.title === 'undefined') {
+      return { isValid: false, message: 'Book\'s title cannot be empty' }
+    } else {
+      return { isValid: true }
+    }
+  }
+
+  static delete (where) {
+    return super.delete('book', where)
+  }
+
+  static deleteById (id) {
+    return super.deleteById('book', id)
+  }
+
+  static findById (id) {
+    return super.findById('book', id)
+  }
+
+  static findByName (bookName) {
+    return super.select('book', {
+      title: bookName
+    })
+  }
+
+  static list (limit = settings.itemsPerPage.book, offset = 0) {
+    limit = limit || settings.itemsPerPage.book
+    offset = offset || 0
+    return super.select('book', null, limit, offset)
+  }
+
+  static count () {
+    return super.count('book')
+  }
+}
+
+module.exports = Book

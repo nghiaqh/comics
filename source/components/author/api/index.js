@@ -1,13 +1,13 @@
 import { getAll } from './all'
 import { createOne, getOne, deleteOne, updateOne } from './single'
 
-const author = require('express').Router()
+const authorAPI = require('express').Router()
 
-author.get('/', getAll)
-author.post('/', createOne)
+authorAPI.get('/', getAll)
+authorAPI.post('/', createOne)
 
-author.get('/:authorId', getOne)
-author.delete('/:authorId', deleteOne)
-author.put('/:authorId', updateOne)
+authorAPI.get('/:authorId', getOne)
+authorAPI.delete('/:authorId', deleteOne)
+authorAPI.put('/:authorId', updateOne)
 
-export { author }
+export { authorAPI }
