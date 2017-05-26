@@ -8,8 +8,9 @@
   "description": "A small app managing Comic book with React, Express and ES6",
   "author": "Nathan Quach",
   "scripts": {
-    "knex:migrate": "./node_modules/knex/bin/cli.js migrate:latest",
-    "knex:rollback": "./node_modules/knex/bin/cli.js migrate:rollback",
+    "migrate:make": "./node_modules/knex/bin/cli.js migrate:make",
+    "migrate:latest": "./node_modules/knex/bin/cli.js migrate:latest",
+    "migrate:rollback": "./node_modules/knex/bin/cli.js migrate:rollback",
     "build": "./node_modules/.bin/webpack --config webpack.dev.config.js --progress --colors",
     "start": "npm run -f build && node build/index.js"
   },

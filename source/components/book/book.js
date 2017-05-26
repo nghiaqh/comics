@@ -1,5 +1,7 @@
 const PersistedModel = require('../database/persisted-model')
 const settings = require('../../config')
+const _ = require('lodash')
+import { Author } from '../author'
 
 /**
  * Book class
@@ -13,6 +15,7 @@ class Book extends PersistedModel {
     this.coverPicture = coverPicture
     this.seriesId = seriesId
     this.numberOfChapters = numberOfChapters
+    this.authors = null
   }
 
   save () {
@@ -82,6 +85,37 @@ class Book extends PersistedModel {
   static count () {
     return super.count('book')
   }
+
+  setAuthor (authorId) {
+    const book = this
+    const promise = new Promise((resolve, reject) => {
+      Author.findById(authorId).then(authors => {
+        if (_.isArray(authors) && authors.length) {
+          const data = {
+            book_id: book.id,
+            author_id: authorId
+          }
+          book.authors = authors
+          resolve(book.insert(data, 'book_author'))
+        } else {
+          reject(new Error('No author with id: ' + authorId))
+        }
+      }).catch(err => {
+        reject(err)
+      })
+    })
+
+    return promise
+  }
+
+  getAuthors () {
+    const book = this
+    if (this.authors === null) {
+
+    }
+
+    return book.authors
+  }
 }
 
-module.exports = Book
+export { Book }

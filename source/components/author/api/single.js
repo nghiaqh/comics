@@ -1,4 +1,4 @@
-const Author = require('../author')
+import { Author } from '../author'
 const _ = require('lodash')
 
 function createOne (req, res, next) {

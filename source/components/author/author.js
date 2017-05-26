@@ -78,4 +78,4 @@ class Author extends PersistedModel {
   }
 }
 
-module.exports = Author
+export { Author }

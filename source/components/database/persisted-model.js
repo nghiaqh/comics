@@ -16,8 +16,11 @@ class PersistedModel {
    * @param {mixed} data object e.g { title: 'Slaugherhouse Five' } or array of objects for multiple rows insert. Knex will normalise empty keys on multi-row insert.
    * @param {Integer} timeout set a timeout for query
    */
-  insert (data, returning = '*') {
-    const table = this.getTable()
+  insert (data, table = null, returning = '*') {
+    if (!table) {
+      table = this.getTable()
+    }
+
     return knex(table).returning(returning).insert(data).timeout(defaultTimeout)
   }
 

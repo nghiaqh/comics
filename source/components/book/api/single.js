@@ -1,4 +1,4 @@
-const Book = require('../book')
+import { Book } from '../book'
 const _ = require('lodash')
 
 function createOne (req, res, next) {
@@ -69,11 +69,14 @@ function updateOne (req, res, next) {
     s = 'name'
   }
 
-  p.then(data => {
-    if (!data) {
+  p.then(searchResult => {
+    if (!searchResult) {
       res.status(404).json({ message: 'No book with ' + s + ' ' + id })
     } else {
-      const book = new Book(data[0].title, data[0].description, data[0].coverPicture, data[0].series_id, data[0].book_id, data[0].number_of_chapters)
+      const book = new Book(searchResult[0].title, searchResult[0].description, searchResult[0].coverPicture, searchResult[0].series_id, searchResult[0].book_id, searchResult[0].number_of_chapters)
+
+      // Update book properties
+      // TODO: create a function for this task
       if (typeof req.body.title !== 'undefined') {
         book.title = req.body.title
       }
@@ -94,15 +97,23 @@ function updateOne (req, res, next) {
         book.numberOfChapters = req.body.numberOfChapters
       }
 
-      book.save().then(data => {
-        if (data) {
+      // Save the modified book object to database
+      book.save().then(isSaved => {
+        if (req.body.authorId) {
+          book.setAuthor(req.body.authorId).then(values => {
+            res.status(200).json({
+              message: 'Updated book and linked author',
+              data: book
+            })
+          }).catch(err => {
+            res.status(400).json({ message: err.message })
+          })
+        } else if (isSaved) {
           res.status(200).json({
             message: 'Updated book id ' + id,
             data: book
           })
         }
-      }).catch(err => {
-        res.status(400).json({ message: err.message })
       })
     }
   }).catch(err => {
