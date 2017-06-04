@@ -75,7 +75,7 @@ function updateOne (req, res, next) {
   }
 
   p.then(searchResult => {
-    if (!searchResult) {
+    if (_.isArray(searchResult) && searchResult.length === 0) {
       res.status(404).json({ message: 'No book with ' + s + ' ' + id })
     } else {
       const book = new Book(searchResult[0].title, searchResult[0].description, searchResult[0].cover_picture, searchResult[0].series_id, searchResult[0].book_id, searchResult[0].number_of_chapters)
