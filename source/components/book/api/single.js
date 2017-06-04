@@ -27,7 +27,12 @@ function getOne (req, res) {
     if (_.isArray(data) && data.length === 0) {
       res.status(404).json({ message: 'No book with ' + s + ' ' + id })
     } else {
-      res.status(200).json({ data: data })
+      const book = new Book(data[0].title, data[0].descripton, data[0].cover_picture, data[0].series_id, data[0].book_id, data[0].number_of_chapters)
+      book.getAuthors().then(bookObj => {
+        res.status(200).json({ data: bookObj })
+      }).catch(err => {
+        res.status(500).json({ message: err.message })
+      })
     }
   }).catch(err => {
     res.status(400).json({ message: err.message })
@@ -106,7 +111,7 @@ function updateOne (req, res, next) {
               data: book
             })
           }).catch(err => {
-            res.status(400).json({ message: err.message })
+            res.status(402).json({ message: err.message })
           })
         } else if (isSaved) {
           res.status(200).json({

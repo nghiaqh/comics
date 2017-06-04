@@ -110,12 +110,36 @@ class Book extends PersistedModel {
   }
 
   getAuthors () {
-    const book = this
-    if (this.authors === null) {
+    let book = this
+    const promise = new Promise((resolve, reject) => {
+      PersistedModel.select('book_author', { book_id: this.id }, 100, 0, 'author_id').then(ids => {
+        // now we have list of author id linked to this book
+        if (_.isArray(ids) && ids.length) {
+          let promiseArr = []
+          ids.forEach(id => {
+            // search for author record & add to book.authors
+            promiseArr.push(Author.findById(id.author_id))
+          })
 
-    }
+          Promise.all(promiseArr).then(authors => {
+            book.authors = book.authors === null ? [] : book.authors
+            authors.forEach(author => {
+              book.authors.push(author[0])
+            })
+            resolve(book)
+          }).catch(err => {
+            reject(err)
+          })
+        } else {
+          book.authors = []
+          resolve(book)
+        }
+      }).catch(err => {
+        reject(err)
+      })
+    })
 
-    return book.authors
+    return promise
   }
 }
 
