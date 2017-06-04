@@ -73,7 +73,7 @@ function updateOne (req, res, next) {
     if (!searchResult) {
       res.status(404).json({ message: 'No book with ' + s + ' ' + id })
     } else {
-      const book = new Book(searchResult[0].title, searchResult[0].description, searchResult[0].coverPicture, searchResult[0].series_id, searchResult[0].book_id, searchResult[0].number_of_chapters)
+      const book = new Book(searchResult[0].title, searchResult[0].description, searchResult[0].cover_picture, searchResult[0].series_id, searchResult[0].book_id, searchResult[0].number_of_chapters)
 
       // Update book properties
       // TODO: create a function for this task

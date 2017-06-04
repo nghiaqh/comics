@@ -6,7 +6,7 @@ const settings = require('../../config')
  */
 class Author extends PersistedModel {
   constructor (name, bio, photo, id = null) {
-    super('author') // set the mysql table name
+    super()
     this.id = id
     this.name = name
     this.bio = bio
@@ -24,9 +24,9 @@ class Author extends PersistedModel {
           photo: author.photo
         }
         if (!author.id) { // no id, create new record
-          resolve(author.insert(data))
+          resolve(Author.insert(data, 'author'))
         } else { // with id, update record with whatever valid field
-          resolve(author.update(data))
+          resolve(Author.update(data, 'author'))
         }
       } else { // invalid author data
         reject(new Error(test.message))

@@ -8,7 +8,7 @@ import { Author } from '../author'
  */
 class Book extends PersistedModel {
   constructor (title, description, coverPicture, seriesId = null, bookId = null, numberOfChapters = null) {
-    super('book') // set the mysql table name
+    super()
     this.id = bookId
     this.title = title
     this.description = description
@@ -31,9 +31,9 @@ class Book extends PersistedModel {
           number_of_chapters: book.numberOfChapters
         }
         if (!book.id) { // no id, create new record
-          resolve(book.insert(data))
+          resolve(Book.insert(data, 'book'))
         } else { // with id, update record with whatever valid field
-          resolve(book.update(data))
+          resolve(Book.update(data, 'book'))
         }
       } else { // invalid book data
         reject(new Error(test.message))
@@ -89,6 +89,7 @@ class Book extends PersistedModel {
   setAuthor (authorId) {
     const book = this
     const promise = new Promise((resolve, reject) => {
+      // Check if author id is valid
       Author.findById(authorId).then(authors => {
         if (_.isArray(authors) && authors.length) {
           const data = {
@@ -96,7 +97,7 @@ class Book extends PersistedModel {
             author_id: authorId
           }
           book.authors = authors
-          resolve(book.insert(data, 'book_author'))
+          resolve(Book.insert(data, 'book_author'))
         } else {
           reject(new Error('No author with id: ' + authorId))
         }

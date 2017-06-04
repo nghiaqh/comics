@@ -4,23 +4,13 @@ const knex = require('knex')(config[environment])
 const defaultTimeout = 1000
 
 class PersistedModel {
-  constructor (table) {
-    var _table = table
-    this.setTable = function (table) { _table = table }
-    this.getTable = function () { return _table }
-  }
-
   /**
    * Insert row(s) into table
    * @param {String} table table name
    * @param {mixed} data object e.g { title: 'Slaugherhouse Five' } or array of objects for multiple rows insert. Knex will normalise empty keys on multi-row insert.
    * @param {Integer} timeout set a timeout for query
    */
-  insert (data, table = null, returning = '*') {
-    if (!table) {
-      table = this.getTable()
-    }
-
+  static insert (data, table, returning = '*') {
     return knex(table).returning(returning).insert(data).timeout(defaultTimeout)
   }
 
@@ -29,8 +19,7 @@ class PersistedModel {
    * @param {mixed} data object e.g { title: 'Slaugherhouse Five' } or array of objects for multiple rows insert. Knex will normalise empty keys on multi-row insert.
    * @param {Integer} timeout set a timeout for query
    */
-  update (data) {
-    const table = this.getTable()
+  static update (data, table) {
     return knex(table).where(table + '_id', '=', this.id).update(data).timeout(defaultTimeout)
   }
 
