@@ -8,7 +8,7 @@ import { Author } from '../author'
  */
 class Book extends PersistedModel {
   constructor (title, description, coverPicture, seriesId = null, bookId = null, numberOfChapters = null) {
-    super()
+    super('book')
     this.id = bookId
     this.title = title
     this.description = description
@@ -31,9 +31,9 @@ class Book extends PersistedModel {
           number_of_chapters: book.numberOfChapters
         }
         if (!book.id) { // no id, create new record
-          resolve(Book.insert(data, 'book'))
+          resolve(this.insert(data))
         } else { // with id, update record with whatever valid field
-          resolve(Book.update(data, 'book'))
+          resolve(this.update(data))
         }
       } else { // invalid book data
         reject(new Error(test.message))
@@ -96,8 +96,13 @@ class Book extends PersistedModel {
             book_id: book.id,
             author_id: authorId
           }
+
           book.authors = authors
-          resolve(Book.insert(data, 'book_author'))
+          Book.insertToTable(data, 'book_author').then(result => {
+            resolve(result)
+          }).catch(err => {
+            reject(err)
+          })
         } else {
           reject(new Error('No author with id: ' + authorId))
         }
@@ -137,6 +142,56 @@ class Book extends PersistedModel {
       }).catch(err => {
         reject(err)
       })
+    })
+
+    return promise
+  }
+
+  static createBook (title, author = null) {
+    const promise = new Promise((resolve, reject) => {
+      if (title && title.trim() !== '') {
+        title = title.trim()
+        Book.findByName(title).then(data => {
+          if (_.isArray(data) && data.length === 0) {
+            // No book with this name in database, create new book record
+            const book = new Book(title, '', '')
+            book.save().then(data2 => {
+              book.id = data2[0]
+
+              if (author) {
+                book.setAuthor(author.id).then(result => {
+                  book.authors = [author]
+                  resolve(book)
+                }).catch(err => {
+                  reject(err)
+                })
+              } else {
+                resolve(book)
+              }
+            }).catch(err => {
+              reject(err)
+            })
+          } else {
+            // Found book with this name in database, return book object
+            const book = new Book(data[0].title, data[0].description, data[0].coverPicture, data[0].series_id, data[0].book_id, data[0].number_of_chapters)
+
+            if (author) {
+              book.setAuthor(author.id).then(result => {
+                book.authors = [author]
+                resolve(book)
+              }).catch(err => {
+                resolve(book) // we don't want to break the promise chain. Err happens if a book_author row is already created for this book and author
+              })
+            } else {
+              resolve(book)
+            }
+          }
+        }).catch(err => {
+          reject(err)
+        })
+      } else {
+        reject('Book title cannot be empty')
+      }
     })
 
     return promise

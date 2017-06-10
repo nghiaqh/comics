@@ -1,12 +1,13 @@
 const PersistedModel = require('../database/persisted-model')
 const settings = require('../../config')
+const _ = require('lodash')
 
 /**
  * Author class
  */
 class Author extends PersistedModel {
   constructor (name, bio, photo, id = null) {
-    super()
+    super('author')
     this.id = id
     this.name = name
     this.bio = bio
@@ -24,9 +25,9 @@ class Author extends PersistedModel {
           photo: author.photo
         }
         if (!author.id) { // no id, create new record
-          resolve(Author.insert(data, 'author'))
+          resolve(this.insert(data))
         } else { // with id, update record with whatever valid field
-          resolve(Author.update(data, 'author'))
+          resolve(this.update(data))
         }
       } else { // invalid author data
         reject(new Error(test.message))
@@ -76,6 +77,35 @@ class Author extends PersistedModel {
   static count () {
     return super.count('author')
   }
+
+  static createAuthor (name, bio = null, photo = null) {
+    const promise = new Promise((resolve, reject) => {
+      if (name && name.trim() !== '') {
+        name = name.trim()
+        Author.findByName(name).then(data => {
+          if (_.isArray(data) && data.length === 0) {
+            // No author with this name in database, create new author record
+            const author = new Author(name, '', '')
+            author.save().then(data2 => {
+              author.id = data2[0]
+              resolve(author)
+            })
+          } else {
+            // Found author with this name in database, return author object
+            const author = new Author(data[0].name, data[0].bio, data[0].photo, data[0].author_id)
+            resolve(author)
+          }
+        }).catch(err => {
+          reject(err)
+        })
+      } else {
+        reject('Author name cannot be empty')
+      }
+    })
+
+    return promise
+  }
+
 }
 
 export { Author }

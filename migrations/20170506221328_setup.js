@@ -9,6 +9,8 @@ exports.up = function (knex, Promise) {
       table.text('bio')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "user" table')).catch(err => console.log(err)),
 
     knex.schema.alterTable('user', (table) => {
@@ -23,6 +25,8 @@ exports.up = function (knex, Promise) {
       table.foreign('user_id').references('user.user_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "collection" table')).catch(err => console.log(err)),
 
     knex.schema.createTable('series', (table) => {
@@ -32,6 +36,8 @@ exports.up = function (knex, Promise) {
       table.text('description')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "series" table')).catch(err => console.log(err)),
 
     knex.schema.createTable('book', (table) => {
@@ -44,6 +50,8 @@ exports.up = function (knex, Promise) {
       table.foreign('series_id').references('series.series_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "book" table')).catch(err => console.log(err)),
 
     knex.schema.createTable('chapter', (table) => {
@@ -56,6 +64,8 @@ exports.up = function (knex, Promise) {
       table.foreign('book_id').references('book.book_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "chapter" table')).catch(err => console.log(err)),
 
     knex.schema.createTable('page', (table) => {
@@ -68,6 +78,8 @@ exports.up = function (knex, Promise) {
       table.foreign('chapter_id').references('chapter.chapter_id').onUpdate('CASCADE').onDelete('CASCADE')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "page" table')).catch(err => console.log(err)),
 
     knex.schema.createTable('author', (table) => {
@@ -77,6 +89,8 @@ exports.up = function (knex, Promise) {
       table.text('photo')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "author" table')).catch(err => console.log(err)),
 
     knex.schema.alterTable('author', (table) => {
@@ -90,6 +104,8 @@ exports.up = function (knex, Promise) {
       table.text('cover_picture')
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+      table.collate('utf8_general_ci')
+      table.charset('utf8')
     }).then(res => console.log('Created "genre" table')).catch(err => console.log(err)),
 
     knex.schema.alterTable('genre', (table) => {
