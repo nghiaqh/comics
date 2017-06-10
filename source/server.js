@@ -3,50 +3,49 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
-export default function server () {
-  const app = express()
-  const { routes } = require('./routes')
-  const publicPath = express.static(path.join(__dirname, '../build'))
 
-  // view engine setup
-  app.set('views', path.join(__dirname, 'views'))
-  app.set('view engine', 'jade')
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: true }))
-  app.use(cookieParser())
-  app.use('/public', publicPath)
+const app = express()
+const { routes } = require('./routes')
+const publicPath = express.static(path.join(__dirname, '../build/public'))
 
-  // Routes
-  app.use('/', routes)
+// view engine setup
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'jade')
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use('/public', publicPath)
 
-  // catch 404 and forward to error handler
-  app.use(function (req, res, next) {
-    const err = new Error('Not Found')
-    err.status = 404
-    next(err)
-  })
+// Routes
+app.use('/', routes)
 
-  // development error handler
-  // will print stacktrace
-  if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
-      res.status(err.status || 500)
-      res.render('error', {
-        message: err.message,
-        error: err
-      })
-    })
-  }
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  const err = new Error('Not Found')
+  err.status = 404
+  next(err)
+})
 
-  // production error handler
-  // no stacktraces leaked to user
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
   app.use(function (err, req, res, next) {
     res.status(err.status || 500)
     res.render('error', {
       message: err.message,
-      error: {}
+      error: err
     })
   })
-
-  return app
 }
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500)
+  res.render('error', {
+    message: err.message,
+    error: {}
+  })
+})
+
+export default app

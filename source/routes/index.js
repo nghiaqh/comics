@@ -11,7 +11,7 @@ routes.use('/api/import', importAPI)
 
 /* GET home page. */
 routes.get('/', function (req, res, next) {
-  res.render('index.jade', { title: 'Home page' })
+  res.render('index.jade', { title: 'Comics - Home page' })
 })
 
 export { routes }
