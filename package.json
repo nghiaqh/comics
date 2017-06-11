@@ -12,7 +12,7 @@
     "migrate:latest": "./node_modules/knex/bin/cli.js migrate:latest",
     "migrate:rollback": "./node_modules/knex/bin/cli.js migrate:rollback",
     "build": "rm -rf ./build && ./node_modules/.bin/webpack --config webpack.config.js --progress --colors",
-    "start": "npm run build && node build/index.js",
+    "start": "npm run build && node build/server.js",
     "dev": "rm -rf ./build && ./node_modules/.bin/webpack --config webpack.dev.config.js --progress --colors"
   },
   "dependencies": {

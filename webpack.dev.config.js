@@ -18,11 +18,12 @@ const common = {
 // frontend settings/context
 const frontendConfig = {
   entry: [
-    // 'react-hot-loader/patch', // activate HMR for React
-    // 'webpack/hot/only-dev-server', // bundle the client for hot reloading
-    // 'webpack-hot-middleware/client',
+    'react-hot-loader/patch', // activate HMR for React
+    'webpack/hot/only-dev-server', // bundle the client for hot reloading
+    'webpack-hot-middleware/client',
     './source/client.js'
   ],
+  target: 'web',
   output: {
     path: path.resolve(__dirname, 'build/public/'),
     filename: 'bundle.js',
@@ -42,21 +43,13 @@ const frontendConfig = {
       // },
       {
         test: /\.js$/,
-        exclude: [
-          /node_modules/,
-          /source\/components\/database/
-        ],
+        exclude: /node_modules/,
         use: [ 'babel-loader' ]
       }
     ]
   },
   plugins: [
     // new ExtractTextPlugin('styles.css'),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['commons', 'manifest'], // Specify the common bundle's name.
-      filename: 'commons.js',
-      minChunks: 2 // any modules that get loaded 2 or more will bundle into commons.js
-    }),
     new webpack.HotModuleReplacementPlugin(), // enable HMR globally
     new webpack.NamedModulesPlugin() // prints more readable module names in the browser console on HMR updates
   ]
@@ -66,7 +59,7 @@ const frontendConfig = {
 const backendConfig = {
   entry: [
     'webpack/hot/poll?1000',
-    './source/index.js'
+    './source/server.js'
   ],
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals({
@@ -74,7 +67,7 @@ const backendConfig = {
   })], // in order to ignore all modules in node_modules folder
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'index.js'
+    filename: 'server.js'
   },
   module: {
     rules: [
@@ -89,7 +82,7 @@ const backendConfig = {
     __dirname: true
   },
   plugins: [
-    new StartServerPlugin('index.js'),
+    new StartServerPlugin('server.js'),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()

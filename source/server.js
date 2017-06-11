@@ -3,7 +3,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 
-
 const app = express()
 const { routes } = require('./routes')
 const publicPath = express.static(path.join(__dirname, '../build/public'))
@@ -48,4 +47,17 @@ app.use(function (err, req, res, next) {
   })
 })
 
-export default app
+const port = (process.env.PORT || 3000)
+let server = app.listen(port)
+console.log(`Listening at http://localhost:${port}`)
+
+let currentApp = app
+
+// Hot Module Reload
+if (module.hot) {
+ module.hot.accept('./server', () => {
+  server.removeListener('request', currentApp)
+  server.on('request', app)
+  currentApp = app
+ })
+}

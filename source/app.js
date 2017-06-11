@@ -4,7 +4,7 @@ import React from 'react'
 
 const App = () => (
   <div className='app'>
-    <h2>Hello, </h2>
+    <h2>Comics</h2>
   </div>
 )
 
