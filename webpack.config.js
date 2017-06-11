@@ -1,7 +1,4 @@
 const path = require('path')
-
-// This plugin to generate css bundle so we can load css async instead of waiting for Js bundle to be loaded.
-// const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 
@@ -20,22 +17,12 @@ const frontendConfig = {
   ],
   output: {
     path: path.resolve(__dirname, 'build/public/'),
-    filename: 'bundle.js'
+    filename: 'client.js'
   },
   module: {
     rules: [
-      // {
-      //   test: /\.styl$/,
-      //   use: ExtractTextPlugin.extract({
-      //     use: [
-      //       'style-loader',
-      //       'css-loader',
-      //       'stylus-loader'
-      //     ]
-      //   })
-      // },
       {
-        test: /\.js$/,
+        test: /\.js?$/,
         exclude: [
           /node_modules/,
           /source\/components\/database/
@@ -45,12 +32,6 @@ const frontendConfig = {
     ]
   },
   plugins: [
-    // new ExtractTextPlugin('styles.css'),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['commons', 'manifest'], // Specify the common bundle's name.
-      filename: 'commons.js',
-      minChunks: 2 // any modules that get loaded 2 or more will bundle into commons.js
-    })
   ]
 }
 
@@ -59,8 +40,10 @@ const backendConfig = {
   entry: [
     './source/server.js'
   ],
-  target: 'node', // in order to ignore built-in modules like path, fs, etc.
-  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
+  target: 'node',
+  // in order to ignore built-in modules like path, fs, etc.
+  externals: [nodeExternals()],
+  // in order to ignore all modules in node_modules folder
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'server.js'
@@ -68,7 +51,7 @@ const backendConfig = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js?$/,
         exclude: /node_modules/,
         use: [ 'babel-loader' ]
       }

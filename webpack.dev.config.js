@@ -1,61 +1,53 @@
 const path = require('path')
-
-// This plugin to generate css bundle so we can load css async instead of waiting for Js bundle to be loaded.
-// const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 const StartServerPlugin = require('start-server-webpack-plugin')
 
 // Shared settings between frontend and backend
 const common = {
-  devtool: 'cheap-eval-source-map',
+  devtool: 'inline-source-map',
   resolve: {
     extensions: ['.jade', '.styl', '.js', '.jsx']
   },
   watch: true
 }
 
-// frontend settings/context
+// frontend settings
 const frontendConfig = {
   entry: [
-    'react-hot-loader/patch', // activate HMR for React
-    'webpack/hot/only-dev-server', // bundle the client for hot reloading
+    'react-hot-loader/patch',
     'webpack-hot-middleware/client',
     './source/client.js'
   ],
   target: 'web',
   output: {
     path: path.resolve(__dirname, 'build/public/'),
-    filename: 'bundle.js',
-    publicPath: '/' // necessary for HMR to know where to load the hot update chunks
+    filename: 'client.js',
+    publicPath: '/'
+    // necessary for HMR to know where to load the hot update chunks
   },
   module: {
     rules: [
-      // {
-      //   test: /\.styl$/,
-      //   use: ExtractTextPlugin.extract({
-      //     use: [
-      //       'style-loader',
-      //       'css-loader',
-      //       'stylus-loader'
-      //     ]
-      //   })
-      // },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: [ 'babel-loader' ]
+        use: [{
+          loader: 'babel-loader'
+        }]
       }
     ]
   },
   plugins: [
-    // new ExtractTextPlugin('styles.css'),
-    new webpack.HotModuleReplacementPlugin(), // enable HMR globally
-    new webpack.NamedModulesPlugin() // prints more readable module names in the browser console on HMR updates
+    new webpack.HotModuleReplacementPlugin(),
+    // enable HMR globally
+    new webpack.NamedModulesPlugin(),
+    // prints more readable module names in the browser console on HMR updates
+    new webpack.NoEmitOnErrorsPlugin()
+    // do not emit compiled assets that include errors
   ]
 }
 
-// backend settings/context
+// backend settings
 const backendConfig = {
   entry: [
     'webpack/hot/poll?1000',
@@ -72,7 +64,7 @@ const backendConfig = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.js?$/,
         exclude: /node_modules/,
         use: [ 'babel-loader' ]
       }
@@ -83,8 +75,8 @@ const backendConfig = {
   },
   plugins: [
     new StartServerPlugin('server.js'),
-    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
   ]
 }
