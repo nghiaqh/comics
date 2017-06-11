@@ -1,5 +1,5 @@
-const config = require('../../../knexfile.js')
-const environment = 'development'
+const config = require('../../../../knexfile.js')
+const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
 const knex = require('knex')(config[environment])
 const defaultTimeout = 1000
 

@@ -1,18 +1,18 @@
-import { authorAPI } from '../components/author'
-import { bookAPI } from '../components/book'
-import { importAPI } from '../components/import'
+import { authorAPI } from './components/author'
+import { bookAPI } from './components/book'
+import { importAPI } from './components/import'
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import App from '../react-app'
+import App from '../client/react-app'
 
-const routes = require('express').Router()
+const route = require('express').Router()
 
 /* API */
-routes.use('/api/author', authorAPI)
-routes.use('/api/book', bookAPI)
-routes.use('/api/import', importAPI)
+route.use('/api/author', authorAPI)
+route.use('/api/book', bookAPI)
+route.use('/api/import', importAPI)
 
-routes.get('*', function (req, res, next) {
+route.get('*', function (req, res, next) {
   let application = renderToString(<App />)
   let html = `<!doctype html>
     <html class="no-js" lang="">
@@ -32,4 +32,4 @@ routes.get('*', function (req, res, next) {
   res.send(html)
 })
 
-export { routes }
+export { route }

@@ -6,10 +6,10 @@ const cookieParser = require('cookie-parser')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const webpack = require('webpack')
-const webpackDevConfig = require('../webpack.dev.config.js')
+const webpackDevConfig = require('../../webpack.dev.config.js')
 
 const app = express()
-const { routes } = require('./routes')
+const { route } = require('./route')
 const publicPath = express.static(path.join(__dirname, '../build/public'))
 
 // view engine setup
@@ -38,7 +38,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Routes
-app.use('/', routes)
+app.use('/', route)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

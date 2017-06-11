@@ -13,7 +13,7 @@ const common = {
 // frontend settings/context
 const frontendConfig = {
   entry: [
-    './source/client.js'
+    './source/client/index.js'
   ],
   output: {
     path: path.resolve(__dirname, 'build/public/'),
@@ -38,7 +38,7 @@ const frontendConfig = {
 // backend settings/context
 const backendConfig = {
   entry: [
-    './source/server.js'
+    './source/server/index.js'
   ],
   target: 'node',
   // in order to ignore built-in modules like path, fs, etc.

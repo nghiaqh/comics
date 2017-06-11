@@ -17,13 +17,13 @@ const frontendConfig = {
   entry: [
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
-    './source/client.js'
+    './source/client/index.js'
   ],
   target: 'web',
   output: {
     path: path.resolve(__dirname, 'build/public/'),
     filename: 'client.js',
-    publicPath: '/'
+    publicPath: '/public/'
     // necessary for HMR to know where to load the hot update chunks
   },
   module: {
@@ -31,9 +31,8 @@ const frontendConfig = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader'
-        }]
+        include: path.resolve(__dirname, 'source/client'),
+        use: [ 'babel-loader']
       }
     ]
   },
@@ -51,7 +50,7 @@ const frontendConfig = {
 const backendConfig = {
   entry: [
     'webpack/hot/poll?1000',
-    './source/server.js'
+    './source/server/index.js'
   ],
   target: 'node', // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals({
