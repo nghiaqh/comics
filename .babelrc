@@ -1,9 +1,5 @@
 {
-  "presets": [
-    [ "es2015", { "modules": false } ],
-    "stage-2",
-    "react"
-  ],
-  "plugins": ["react-hot-loader/babel"],
-  "ignore": "node_modules"
+  "presets": [["es2015", { "modules": false }], "react"],
+  "ignore": "node_modules",
+  "plugins": ["react-hot-loader/babel"]
 }

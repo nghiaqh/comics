@@ -23,7 +23,7 @@ const frontendConfig = {
   output: {
     path: path.resolve(__dirname, 'build/public/'),
     filename: 'client.js',
-    publicPath: '/public/'
+    publicPath: 'http://localhost:3000/public/'
     // necessary for HMR to know where to load the hot update chunks
   },
   module: {

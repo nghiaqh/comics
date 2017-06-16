@@ -3,10 +3,20 @@ import { render } from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import App from './react-app'
 
-render(<AppContainer>
- <App />
-</AppContainer>, document.getElementById('root'))
+render(
+  <AppContainer>
+    <App />
+  </AppContainer>,
+  document.getElementById('root')
+)
 
 if (module.hot) {
-  module.hot.accept()
+  module.hot.accept('./react-app', () => {
+    render(
+      <AppContainer>
+        <App />
+      </AppContainer>,
+      document.getElementById('root')
+    )
+  })
 }
