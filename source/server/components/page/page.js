@@ -7,13 +7,13 @@ import { Book } from '../book'
  * Page class - a book page
  */
 class Page extends PersistedModel {
-  constructor (number, src, bookId, chapterId, id = null) {
+  constructor (number, src, bookId, chapter, id = null) {
     super('page')
     this.id = id
     this.number = number
     this.src = src
     this.bookId = bookId
-    this.chapterId = chapterId
+    this.chapter = chapter
   }
 
   asyncValidate () {
@@ -21,7 +21,7 @@ class Page extends PersistedModel {
     this.number = this.normalise(this.number)
     this.src = this.normalise(this.src)
     this.bookId = this.normalise(this.bookId)
-    this.chapterId = this.normalise(this.chapterId)
+    this.chapter = this.normalise(this.chapter)
 
     const promise = new Promise((resolve, reject) => {
       if (this.bookId === '' || this.bookId === null) {
@@ -56,7 +56,7 @@ class Page extends PersistedModel {
               number: page.number,
               src: page.src,
               book_id: page.bookId,
-              chapter_id: page.chapterId
+              chapter_number: page.chapter
             }
             if (!page.id) {
               resolve(this.insert(data))
@@ -97,15 +97,15 @@ class Page extends PersistedModel {
     return super.count('page', null, { 'book_id': bookId })
   }
 
-  static findByChapterId
-  (chapterId, limit = settings.itemsPerPage.page, offset = 0) {
+  static findByChapter
+  (chapter, limit = settings.itemsPerPage.page, offset = 0) {
     limit = Number.isInteger(limit) ? limit : settings.itemsPerPage.page
     offset = Number.isInteger(offset) ? offset : 0
-    return super.select('page', { chapter_id: chapterId }, limit, offset)
+    return super.select('page', { chapter_number: chapter }, limit, offset)
   }
 
-  static countPageByChapterId (chapterId) {
-    return super.count('page', null, { 'chapter_id': chapterId })
+  static countPageByChapter (chapter) {
+    return super.count('page', null, { 'chapter_number': chapter })
   }
 }
 

@@ -85,7 +85,7 @@ exports.up = function (knex, Promise) {
       table.integer('book_id').unsigned().notNullable()
       table.foreign('book_id').references('book.book_id')
         .onUpdate('CASCADE').onDelete('CASCADE')
-      table.integer('chapter_id').unsigned().notNullable()
+      table.integer('chapter_number').unsigned().notNullable()
       table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'))
       table.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
       table.collate('utf8_general_ci')
