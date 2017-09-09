@@ -13,7 +13,7 @@ bookAPI.get('/:bookId', getOne)
 bookAPI.delete('/:bookId', deleteOne)
 bookAPI.put('/:bookId', updateOne)
 
-bookAPI.post('/:bookId/pages', createOnePage)
+bookAPI.post('/:bookId/page', createOnePage)
 bookAPI.get('/:bookId/pages', getAllPages)
 bookAPI.get('/:bookId/pages/:pageId', getOnePage)
 bookAPI.delete('/:bookId/pages/:pageId', deleteOnePage)

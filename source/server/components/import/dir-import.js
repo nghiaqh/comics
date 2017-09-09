@@ -1,5 +1,6 @@
 import { Author } from '../author'
 import { Book } from '../book'
+import { Page } from '../page'
 const fs = require('fs')
 const path = require('path')
 const _ = require('lodash')
@@ -61,11 +62,14 @@ function importDirectory (folderPath) {
               let images = []
 
               fs.readdir(folderPath, (err, items) => {
-                items.forEach(item => {
-                  let p = path.join(folderPath, item)
-                  if (fs.statSync(p).isFile() && imgRe.exec(item)) {
-                    // TODO: create page record from p object
-                    images.push(p)
+                items.forEach((item, index, array) => {
+                  let imgPath = path.join(folderPath, item)
+                  if (fs.statSync(imgPath).isFile() && imgRe.exec(item)) {
+                    images.push(imgPath)
+                    const page = new Page(index + 1, imgPath, book.id, 1)
+                    page.save().then().catch(err => {
+                      reject(err)
+                    })
                   }
                 })
 
@@ -84,7 +88,7 @@ function importDirectory (folderPath) {
         reject(err)
       })
     } else {
-      resolve('Folder name does not meet naming convention [author, book name]: ' + folderPath)
+      reject('Folder name does not meet naming convention [author, book name]: ' + folderPath)
     }
   })
 
