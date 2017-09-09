@@ -40,6 +40,11 @@ function importDirectory (folderPath) {
   const dirName = path.parse(folderPath).base.split('/').pop()
   const authorName = dirName.split(',')[0]
   const bookName = dirName.split(authorName + ',')[1]
+
+  console.log(dirName)
+  console.log(authorName)
+  console.log(bookName)
+
   const promise = new Promise((resolve, reject) => {
     if (typeof authorName !== 'undefined' && authorName.trim() && typeof bookName !== 'undefined' && bookName.trim()) {
       let author
@@ -51,19 +56,21 @@ function importDirectory (folderPath) {
           Book.createBook(bookName, author).then(result => {
             if (result instanceof Book) {
               book = result
-              resolve({ author: author, book: book })
 
-              // const imgRe = /.*\.(jpg|jpeg|png|gif)$/
-              // let images = []
+              const imgRe = /.*\.(jpg|jpeg|png|gif)$/
+              let images = []
 
-              // fs.readdir(folderPath, (err, items) => {
-              //   items.forEach(item => {
-              //     let p = path.join(folderPath, item)
-              //     if (fs.statSync(p).isFile() && imgRe.exec(item)) {
-              //       images.push(p)
-              //     }
-              //   })
-              // })
+              fs.readdir(folderPath, (err, items) => {
+                items.forEach(item => {
+                  let p = path.join(folderPath, item)
+                  if (fs.statSync(p).isFile() && imgRe.exec(item)) {
+                    // TODO: create page record from p object
+                    images.push(p)
+                  }
+                })
+
+                resolve({ author: author, book: book, images: images })
+              })
             } else {
               reject('Cannot create book record: \n' + result)
             }

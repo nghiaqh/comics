@@ -77,8 +77,8 @@ class Book extends PersistedModel {
   }
 
   static list (limit = settings.itemsPerPage.book, offset = 0) {
-    limit = limit || settings.itemsPerPage.book
-    offset = offset || 0
+    limit = Number.isInteger(limit) ? limit : settings.itemsPerPage.book
+    offset = Number.isInteger(offset) ? offset : 0
     return super.select('book', null, limit, offset)
   }
 
@@ -98,7 +98,7 @@ class Book extends PersistedModel {
           }
 
           book.authors = authors
-          Book.insertToTable(data, 'book_author').then(result => {
+          PersistedModel.insertToTable(data, 'book_author').then(result => {
             resolve(result)
           }).catch(err => {
             reject(err)
@@ -106,7 +106,8 @@ class Book extends PersistedModel {
         } else {
           reject(new Error('No author with id: ' + authorId))
         }
-      }).catch(err => {
+      })
+      .catch(err => {
         reject(err)
       })
     })
