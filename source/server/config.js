@@ -1,4 +1,4 @@
-var settings = {
+const settings = {
   itemsPerPage: {
     book: 24,
     chapter: 50,
@@ -7,6 +7,11 @@ var settings = {
     genre: 50,
     collection: 50,
     user: 50
+  },
+
+  vhost: {
+    '/home/nathan/D/': 'http://l.image/',
+    '/home/nathan/Pictures/': 'http://l.image-1/'
   }
 }
 

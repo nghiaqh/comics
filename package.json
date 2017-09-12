@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "engines": {
-    "node": "6.10.0"
+    "node": "6.11.3"
   },
   "description": "A Comic app with React & ExpressJs",
   "author": "Nathan Quach",
