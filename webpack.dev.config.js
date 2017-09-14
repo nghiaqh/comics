@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 const StartServerPlugin = require('start-server-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 // Shared settings between frontend and backend
 const common = {
@@ -33,6 +34,14 @@ const frontendConfig = {
         exclude: /node_modules/,
         include: path.resolve(__dirname, 'source/client'),
         use: [ 'babel-loader']
+      },
+      {
+        test: /\.styl$/,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'stylus-loader']
+        })
       }
     ]
   },
@@ -41,8 +50,9 @@ const frontendConfig = {
     // enable HMR globally
     new webpack.NamedModulesPlugin(),
     // prints more readable module names in the browser console on HMR updates
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
+    new ExtractTextPlugin('styles.css')
   ]
 }
 
@@ -66,6 +76,14 @@ const backendConfig = {
         test: /\.js?$/,
         exclude: /node_modules/,
         use: [ 'babel-loader' ]
+      },
+      {
+        test: /\.styl$/,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'stylus-loader']
+        })
       }
     ]
   },
@@ -76,7 +94,8 @@ const backendConfig = {
     new StartServerPlugin('server.js'),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new ExtractTextPlugin('styles.css')
   ]
 }
 

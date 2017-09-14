@@ -4,9 +4,11 @@ class Author extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      name: '',
-      bio: '',
-      photo: 'http://via.placeholder.com/150x150'
+      id: this.props.id,
+      name: this.props.name,
+      bio: this.props.bio,
+      photo: this.props.photo !== "" ? this.props.photo :
+        'http://via.placeholder.com/150x150'
     }
   }
 
@@ -18,10 +20,10 @@ class Author extends React.Component {
 
   render () {
     return (
-      <div className="author">
-        <img className="author-avatar" src={this.props.photo} alt={this.props.name}/>
-        <h3>{this.props.name}</h3>
-        <p>{this.props.bio}</p>
+      <div className="author" data-id={this.state.id}>
+        <img className="author-avatar" src={this.state.photo} alt={this.state.name}/>
+        <h3>{this.state.name}</h3>
+        <p>{this.state.bio}</p>
       </div>
     )
   }
