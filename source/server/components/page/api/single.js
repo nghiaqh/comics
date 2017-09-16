@@ -1,4 +1,4 @@
-import { Page } from '../page'
+import { Page } from '../Page'
 const _ = require('lodash')
 
 function createOne (req, res, next) {

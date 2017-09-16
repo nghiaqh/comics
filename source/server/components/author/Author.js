@@ -1,5 +1,6 @@
-const PersistedModel = require('../database/persisted-model')
-const settings = require('../../config')
+import appSettings from '../../appSettings'
+import PersistedModel from '../database/PersistedModel'
+
 const _ = require('lodash')
 
 /**
@@ -68,8 +69,8 @@ class Author extends PersistedModel {
     })
   }
 
-  static list (limit = settings.itemsPerPage.author, offset = 0) {
-    limit = limit || settings.itemsPerPage.author
+  static list (limit = appSettings.itemsPerPage.author, offset = 0) {
+    limit = limit || appSettings.itemsPerPage.author
     offset = offset || 0
     return super.select('author', null, limit, offset)
   }

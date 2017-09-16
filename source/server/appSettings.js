@@ -1,4 +1,4 @@
-const settings = {
+const appSettings = {
   itemsPerPage: {
     book: 24,
     chapter: 50,
@@ -15,4 +15,4 @@ const settings = {
   }
 }
 
-module.exports = settings
+export default appSettings

@@ -1,4 +1,4 @@
-import { Book } from '../book'
+import { Book } from '../Book'
 const _ = require('lodash')
 
 function getAll (req, res) {

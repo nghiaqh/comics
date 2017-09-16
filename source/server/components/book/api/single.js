@@ -1,4 +1,4 @@
-import { Book } from '../book'
+import { Book } from '../Book'
 const _ = require('lodash')
 
 function createOne (req, res, next) {

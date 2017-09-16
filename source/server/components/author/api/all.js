@@ -1,4 +1,4 @@
-import { Author } from '../author'
+import { Author } from '../Author'
 const _ = require('lodash')
 
 function getAll (req, res) {

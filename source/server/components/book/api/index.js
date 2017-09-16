@@ -1,22 +1,21 @@
 import { getAll } from './all'
 import { createOne, getOne, deleteOne, updateOne } from './single'
-import { getAll as getAllPages } from '../../page/api/all'
-import { createOne as createOnePage, getOne as getOnePage, deleteOne as deleteOnePage, updateOne as updateOnePage} from '../../page/api/single'
+import { PageAPI } from '../../page/api'
 
 
-const bookAPI = require('express').Router()
+const BookAPI = require('express').Router()
 
-bookAPI.get('/', getAll)
-bookAPI.post('/', createOne)
+BookAPI.get('/', getAll)
+BookAPI.post('/', createOne)
 
-bookAPI.get('/:bookId', getOne)
-bookAPI.delete('/:bookId', deleteOne)
-bookAPI.put('/:bookId', updateOne)
+BookAPI.get('/:bookId', getOne)
+BookAPI.delete('/:bookId', deleteOne)
+BookAPI.put('/:bookId', updateOne)
 
-bookAPI.post('/:bookId/page', createOnePage)
-bookAPI.get('/:bookId/pages', getAllPages)
-bookAPI.get('/:bookId/pages/:pageId', getOnePage)
-bookAPI.delete('/:bookId/pages/:pageId', deleteOnePage)
-bookAPI.put('/:bookId/pages/:pageId', updateOnePage)
+BookAPI.post('/:bookId/page', PageAPI.createOne)
+BookAPI.get('/:bookId/pages', PageAPI.getAll)
+BookAPI.get('/:bookId/pages/:pageId', PageAPI.getOne)
+BookAPI.delete('/:bookId/pages/:pageId', PageAPI.deleteOne)
+BookAPI.put('/:bookId/pages/:pageId', PageAPI.updateOne)
 
-export { bookAPI }
+export { BookAPI }

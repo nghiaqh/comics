@@ -1,5 +1,6 @@
-import app from './express-app'
+import server from './server'
 
 const port = (process.env.PORT || 3000)
-let server = app.listen(port)
+server.listen(port)
+
 console.log(`Listening at http://localhost:${port}`)

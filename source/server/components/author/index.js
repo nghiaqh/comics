@@ -2,4 +2,4 @@
  * author/index.js
  */
 export * from './api'
-export * from './author'
+export * from './Author'

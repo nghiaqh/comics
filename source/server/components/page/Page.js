@@ -1,8 +1,7 @@
-const PersistedModel = require('../database/persisted-model')
-const settings = require('../../config')
-const _ = require('lodash')
-
+import appSettings from '../../appSettings'
+import PersistedModel from '../database/PersistedModel'
 import { Book } from '../book'
+const _ = require('lodash')
 
 /**
  * Page class - a book page
@@ -88,8 +87,8 @@ class Page extends PersistedModel {
     return super.findById('page', id).then(Page.srcProcess)
   }
 
-  static findByBookId (bookId, limit = settings.itemsPerPage.page, offset = 0) {
-    limit = Number.isInteger(limit) ? limit : settings.itemsPerPage.page
+  static findByBookId (bookId, limit = appSettings.itemsPerPage.page, offset = 0) {
+    limit = Number.isInteger(limit) ? limit : appSettings.itemsPerPage.page
     offset = Number.isInteger(offset) ? offset : 0
     return super.select('page', { book_id: bookId }, limit, offset).then(Page.srcProcess)
   }
@@ -99,8 +98,8 @@ class Page extends PersistedModel {
   }
 
   static findByChapter
-  (chapter, limit = settings.itemsPerPage.page, offset = 0) {
-    limit = Number.isInteger(limit) ? limit : settings.itemsPerPage.page
+  (chapter, limit = appSettings.itemsPerPage.page, offset = 0) {
+    limit = Number.isInteger(limit) ? limit : appSettings.itemsPerPage.page
     offset = Number.isInteger(offset) ? offset : 0
     return super.select('page', { chapter_number: chapter }, limit, offset).then(Page.srcProcess)
   }
@@ -115,18 +114,18 @@ class Page extends PersistedModel {
     if (Array.isArray(data)) {
       data.forEach(item => {
         if (!pattern.test(item.src)) {
-          Object.keys(settings.vhost).forEach(key => {
+          Object.keys(appSettings.vhost).forEach(key => {
             if (item.src.search(key) === 0) {
-              item.src = encodeURI(item.src.replace(key, settings.vhost[key]))
+              item.src = encodeURI(item.src.replace(key, appSettings.vhost[key]))
             }
           })
         }
       })
     } else {
       if (!pattern.test(data.src)) {
-        Object.keys(settings.vhost).forEach(key => {
+        Object.keys(appSettings.vhost).forEach(key => {
           if (data.src.search(key) === 0) {
-            data.src = encodeURI(data.src.replace(key, settings.vhost[key]))
+            data.src = encodeURI(data.src.replace(key, appSettings.vhost[key]))
           }
         })
       }

@@ -1,6 +1,6 @@
-import { Author } from '../author'
-import { Book } from '../book'
-import { Page } from '../page'
+import { Author } from '../../author'
+import { Book } from '../../book'
+import { Page } from '../../page'
 const fs = require('fs')
 const path = require('path')
 const _ = require('lodash')
@@ -97,6 +97,26 @@ function importDirectory (folderPath) {
 
 function isUnixHiddenPathOrSystemFolder (path) {
   return (/(^|\/)\.[^\/\.]/g).test(path) || path === 'lost+found';
-};
+}
 
-export { importSubDirectory, importDirectory }
+function importLocalDir (req, res, next) {
+  const folderPath = req.body.folder
+  const importSubDir = req.body.importSubDir
+  if (folderPath && importSubDir === true) {
+    importSubDirectory(folderPath).then(results => {
+      res.status(200).json(results)
+    }).catch(err => {
+      res.status(500).json(err)
+    })
+  } else if (folderPath) {
+    importDirectory(folderPath).then(results => {
+      res.status(200).json(results)
+    }).catch(err => {
+      res.status(500).json(err)
+    })
+  } else {
+    res.status(402).json('Invalid request')
+  }
+}
+
+export { importLocalDir }

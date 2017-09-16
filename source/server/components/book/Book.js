@@ -1,7 +1,7 @@
-const PersistedModel = require('../database/persisted-model')
-const settings = require('../../config')
-const _ = require('lodash')
+import appSettings from '../../appSettings'
+import PersistedModel from '../database/PersistedModel'
 import { Author } from '../author'
+const _ = require('lodash')
 
 /**
  * Book class
@@ -76,8 +76,8 @@ class Book extends PersistedModel {
     })
   }
 
-  static list (limit = settings.itemsPerPage.book, offset = 0) {
-    limit = Number.isInteger(limit) ? limit : settings.itemsPerPage.book
+  static list (limit = appSettings.itemsPerPage.book, offset = 0) {
+    limit = Number.isInteger(limit) ? limit : appSettings.itemsPerPage.book
     offset = Number.isInteger(offset) ? offset : 0
     return super.select('book', null, limit, offset)
   }

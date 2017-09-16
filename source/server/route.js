@@ -1,16 +1,18 @@
-import { authorAPI } from './components/author'
-import { bookAPI } from './components/book'
-import { importAPI } from './components/import'
+import { AuthorAPI } from './components/author'
+import { BookAPI } from './components/book'
+import { ImportAPI } from './components/import'
+
 import React from 'react'
 import { renderToString } from 'react-dom/server'
-import App from '../client/react-app'
+import { StaticRouter } from 'react-router'
+import ReactApp from '../client/ReactApp'
 
 const route = require('express').Router()
 
 /* API */
-route.use('/api/author', authorAPI)
-route.use('/api/book', bookAPI)
-route.use('/api/import', importAPI)
+route.use('/api/author', AuthorAPI)
+route.use('/api/book', BookAPI)
+route.use('/api/import', ImportAPI)
 
 route.get('*', function (req, res, next) {
   let style = ``
@@ -18,7 +20,13 @@ route.get('*', function (req, res, next) {
     style = `<link rel="stylesheet" href="public/app.css">`
   }
 
-  let application = renderToString(<App />)
+  const context = {}
+  let application = renderToString(
+    <StaticRouter location={req.url} context={context}>
+      <ReactApp/>
+    </StaticRouter>
+  )
+
   let html = `<!doctype html>
     <html class="no-js" lang="">
         <head>
@@ -37,11 +45,19 @@ route.get('*', function (req, res, next) {
             ${style}
         </head>
         <body>
-            <div id="root">${application}</div>
+            <div id="app">${application}</div>
             <script src="/public/client.js"></script>
         </body>
     </html>`
-  res.send(html)
+
+  if (context.url) {
+    res.writeHead(301, {
+      Location: context.url
+    })
+    res.end()
+  } else {
+    res.send(html)
+  }
 })
 
 export { route }

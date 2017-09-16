@@ -110,4 +110,4 @@ class PersistedModel {
   }
 }
 
-module.exports = PersistedModel
+export default PersistedModel
