@@ -13,6 +13,11 @@ route.use('/api/book', bookAPI)
 route.use('/api/import', importAPI)
 
 route.get('*', function (req, res, next) {
+  let style = ``
+  if (process.env.NODE_ENV === 'production') {
+    style = `<link rel="stylesheet" href="public/app.css">`
+  }
+
   let application = renderToString(<App />)
   let html = `<!doctype html>
     <html class="no-js" lang="">
@@ -28,6 +33,8 @@ route.get('*', function (req, res, next) {
 
             <!-- Optional theme -->
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+            ${style}
         </head>
         <body>
             <div id="root">${application}</div>

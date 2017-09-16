@@ -20,6 +20,7 @@
     "bootstrap": "^4.0.0-alpha.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
+    "immutable": "^3.8.1",
     "jade": "^1.11.0",
     "knex": "^0.12.9",
     "lodash": "4.17.4",
@@ -27,7 +28,8 @@
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^15.6.1",
-    "react-router": "^4.1.1"
+    "react-router": "^4.1.1",
+    "reselect": "^3.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

@@ -2,13 +2,13 @@ const path = require('path')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 const StartServerPlugin = require('start-server-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const nodeEnv = process.env.NODE_ENV || 'development';
 
 // Shared settings between frontend and backend
 const common = {
   devtool: 'inline-source-map',
   resolve: {
-    extensions: ['.jade', '.styl', '.js', '.jsx']
+    extensions: ['.styl', '.js', '.jsx']
   },
   watch: true
 }
@@ -38,21 +38,28 @@ const frontendConfig = {
       {
         test: /\.styl$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'stylus-loader']
-        })
+        use: [
+          'style-loader',
+          'css-loader',
+          'stylus-loader'
+        ]
       }
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      // http://stackoverflow.com/a/35372706/2177568
+      // for server side code, just require, don't chunk
+      // use `if (ONSERVER) { ...` for server specific code
+      ONSERVER: false,
+      'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+    }),
     new webpack.HotModuleReplacementPlugin(),
     // enable HMR globally
     new webpack.NamedModulesPlugin(),
     // prints more readable module names in the browser console on HMR updates
     new webpack.NoEmitOnErrorsPlugin(),
     // do not emit compiled assets that include errors
-    new ExtractTextPlugin('styles.css')
   ]
 }
 
@@ -80,10 +87,10 @@ const backendConfig = {
       {
         test: /\.styl$/,
         exclude: /node_modules/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'stylus-loader']
-        })
+        use: [
+          'css-loader/locals',
+          'stylus-loader'
+        ]
       }
     ]
   },
@@ -91,11 +98,17 @@ const backendConfig = {
     __dirname: true
   },
   plugins: [
+    new webpack.DefinePlugin({
+      // http://stackoverflow.com/a/35372706/2177568
+      // for server side code, just require, don't chunk
+      // use `if (ONSERVER) { ...` for server specific code
+      ONSERVER: true,
+      'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+    }),
     new StartServerPlugin('server.js'),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new ExtractTextPlugin('styles.css')
+    new webpack.NoEmitOnErrorsPlugin()
   ]
 }
 
