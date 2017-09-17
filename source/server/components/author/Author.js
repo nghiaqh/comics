@@ -1,5 +1,5 @@
-import appSettings from '../../appSettings'
-import PersistedModel from '../database/PersistedModel'
+import appSettings from 'server/appSettings'
+import PersistedModel from 'server/components/database/PersistedModel'
 
 const _ = require('lodash')
 

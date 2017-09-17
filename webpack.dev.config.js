@@ -8,7 +8,14 @@ const nodeEnv = process.env.NODE_ENV || 'development';
 const common = {
   devtool: 'inline-source-map',
   resolve: {
-    extensions: ['.styl', '.js', '.jsx']
+    extensions: ['.styl', '.js', '.jsx'],
+    modules: [
+      path.resolve(__dirname, 'source'),
+      path.resolve(__dirname, 'node_modules')
+    ],
+    alias: {
+      KnexFile: path.resolve(__dirname, 'knexfile.js')
+    }
   },
   watch: true
 }

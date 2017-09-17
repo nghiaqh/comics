@@ -23,7 +23,7 @@ class Book extends React.Component {
   render () {
     return (
       <div className="book" data-id={this.state.id}>
-        <img className="book-cover" src={this.state.coverPicture} alt={this.state.title}/>
+        <img className="book__cover" src={this.state.coverPicture} alt={this.state.title}/>
         <h3>{this.state.title}</h3>
         <p>Authors: {this.props.authors}</p>
         <p>{this.state.description}</p>

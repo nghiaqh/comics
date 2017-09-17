@@ -1,6 +1,6 @@
-import { Author } from '../../author'
-import { Book } from '../../book'
-import { Page } from '../../page'
+import { Author } from 'server/components/author'
+import { Book } from 'server/components/book'
+import { Page } from 'server/components/page'
 const fs = require('fs')
 const path = require('path')
 const _ = require('lodash')

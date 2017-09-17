@@ -1,6 +1,6 @@
 // Update with your config settings.
 
-module.exports = {
+const knexSettings = {
 
   development: {
     client: 'mysql',
@@ -44,3 +44,5 @@ module.exports = {
     }
   }
 }
+
+export default knexSettings

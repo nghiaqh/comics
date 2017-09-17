@@ -11,9 +11,9 @@
     "migrate:make": "./node_modules/knex/bin/cli.js migrate:make",
     "migrate:latest": "./node_modules/knex/bin/cli.js migrate:latest",
     "migrate:rollback": "./node_modules/knex/bin/cli.js migrate:rollback",
-    "build": "rm -rf ./build && ./node_modules/.bin/webpack --config webpack.config.js --progress --colors",
+    "build": "rm -rf ./build && webpack --config webpack.config.js --progress --colors",
     "start": "npm run build && node build/server.js",
-    "dev": "rm -rf ./build && ./node_modules/.bin/webpack --config webpack.dev.config.js --progress --colors"
+    "dev": "rm -rf ./build && webpack --config webpack.dev.config.js --progress --colors"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
@@ -28,8 +28,10 @@
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
     "reselect": "^3.0.1"
   },
   "devDependencies": {

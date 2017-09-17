@@ -5,18 +5,22 @@ import { AppContainer } from 'react-hot-loader'
 import ReactApp from './ReactApp'
 
 render(
-  <BrowserRouter>
-    <ReactApp />
-  </BrowserRouter>,
+  <AppContainer>
+    <BrowserRouter>
+      <ReactApp />
+    </BrowserRouter>
+  </AppContainer>,
   document.getElementById('app')
 )
 
 if (module.hot) {
   module.hot.accept('./ReactApp', () => {
     render(
-      <BrowserRouter>
-        <ReactApp />
-      </BrowserRouter>,
+      <AppContainer>
+        <BrowserRouter>
+          <ReactApp />
+        </BrowserRouter>
+      </AppContainer>,
       document.getElementById('app')
     )
   })

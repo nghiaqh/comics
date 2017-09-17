@@ -1,6 +1,6 @@
-const config = require('../../../../knexfile.js')
+import knexSettings from 'KnexFile'
 const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
-const knex = require('knex')(config[environment])
+const knex = require('knex')(knexSettings[environment])
 const defaultTimeout = 1000
 
 class PersistedModel {

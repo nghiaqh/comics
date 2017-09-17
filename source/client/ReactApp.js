@@ -1,12 +1,12 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
-import style from './components/style/index.styl'
+import style from 'client/components/style/index.styl'
 
-import { Header } from './components/header'
-import { Footer } from './components/footer'
-import { Author } from './components/author'
-import { Book } from './components/book'
+import { Header } from 'client/components/header'
+import { Footer } from 'client/components/footer'
+import { AuthorGrid } from 'client/components/author'
+import { BookGrid } from 'client/components/book'
 
 class ReactApp extends React.Component{
   constructor (props) {
@@ -41,13 +41,13 @@ const Home = () => (
 
 const Authors = () => (
   <div className="authors">
-    <Author id="1" name="Author X" bio="Japanese mangaka" photo=""/>
+    <AuthorGrid />
   </div>
 )
 
 const Books = () => (
   <div className="books">
-    <Book id="1" title="Book 1" description="A short story" coverPicture="" authors="Author X"/>
+    <BookGrid />
   </div>
 )
 
